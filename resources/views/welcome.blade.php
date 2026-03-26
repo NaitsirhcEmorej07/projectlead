@@ -75,7 +75,7 @@
                             </div>
                             <div>
                                 <h3 class="text-sm font-semibold text-gray-900">Admin</h3>
-                                <p class="text-sm text-gray-500 mt-1">
+                                <p class="text-xs text-gray-500 mt-1 leading-tight">
                                     Register as a church admin to manage your worship team, songs, and schedules.
                                 </p>
                             </div>
@@ -94,8 +94,9 @@
                             </div>
                             <div>
                                 <h3 class="text-sm font-semibold text-gray-900">User</h3>
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Find your church to manage your profile and worship assignments.
+                                <p class="text-xs text-gray-500 mt-1 leading-tight">
+                                    Create an account to connect with your church, manage your profile, and check
+                                    worship assignments.
                                 </p>
                             </div>
                         </div>
@@ -105,7 +106,7 @@
 
             <div class="text-center mt-6">
                 <h3 class="text-xs font-normal italic text-gray-500 mt-4 leading-tight">
-                    "Worship team management app that organize team members, manage songs, and plan schedules—keeping
+                    "A worship team management app that organize team members, manage lineups, and plan schedules—keeping
                     your team aligned for every service."
                 </h3>
             </div>

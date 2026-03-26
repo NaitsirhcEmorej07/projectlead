@@ -13,15 +13,15 @@
 
             <!-- Heading -->
             <div class="text-center mb-6">
-                <h1 class="text-xl font-semibold text-gray-900 tracking-wide">
-                    PROJECT LEAD
+                <h1 class="text-lg font-semibold text-gray-900 tracking-wide">
+                    CHURCH ADMIN REGISTRATION
                 </h1>
                 <h3 class="text-sm text-gray-500 mt-0 leading-tight" style="font-family: 'Dancing Script', cursive;">
                     Worship team management, made simple.
                 </h3>
-                <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
+                {{-- <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
                     Please provide your church details below
-                </h3>
+                </h3> --}}
             </div>
 
             <form method="POST" action="{{ route('register') }}">
@@ -38,7 +38,7 @@
                 </div>
 
                 <!-- Church Abbreviation -->
-                <div class="mt-4">
+                <div class="mt-3">
                     <x-input-label for="church_abbr" :value="__('Church Abbreviation')" />
                     <x-text-input id="church_abbr" class="block mt-1 w-full rounded-lg uppercase tracking-wider"
                         type="text" name="church_abbr" :value="old('church_abbr')"
@@ -47,7 +47,7 @@
                 </div>
 
                 <!-- Email -->
-                <div class="mt-4">
+                <div class="mt-3">
                     <x-input-label for="email" :value="__('Email')" />
                     <x-text-input id="email" class="block mt-1 w-full rounded-lg" type="email" name="email"
                         :value="old('email')" required />
@@ -55,7 +55,7 @@
                 </div>
 
                 <!-- Password -->
-                <div class="mt-4">
+                <div class="mt-3">
                     <x-input-label for="password" :value="__('Password')" />
                     <x-text-input id="password" class="block mt-1 w-full rounded-lg" type="password" name="password"
                         required />
@@ -63,7 +63,7 @@
                 </div>
 
                 <!-- Confirm Password -->
-                <div class="mt-4">
+                <div class="mt-3">
                     <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
                     <x-text-input id="password_confirmation" class="block mt-1 w-full rounded-lg" type="password"
                         name="password_confirmation" required />

@@ -34,14 +34,14 @@
             <!-- Heading -->
             <div class="text-center mb-6">
                 <h1 class="text-xl font-semibold text-gray-900 tracking-wide">
-                    PROJECT LEAD
+                    USER REGISTRATION
                 </h1>
                 <h3 class="text-sm text-gray-500 mt-0 leading-tight" style="font-family: 'Dancing Script', cursive;">
                     Worship team management, made simple.
                 </h3>
-                <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
+                {{-- <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
                     Select your church and create your account
-                </h3>
+                </h3> --}}
             </div>
 
             <form method="POST" action="{{ route('register') }}">
@@ -51,7 +51,7 @@
 
                 <!-- Church Selection -->
                 <div>
-                    <x-input-label for="church" :value="__('Church')" />
+                    <x-input-label for="church" :value="__('Church Name')" />
 
                     <select id="church_tom" name="church_id">
                         <option value="">Select Church</option>
@@ -67,7 +67,7 @@
                 </div>
 
                 <!-- Name -->
-                <div class="mt-4">
+                <div class="mt-3">
                     <x-input-label for="name" :value="__('Name')" />
 
                     <x-text-input id="name" class="block mt-1 w-full rounded-lg" type="text" name="name"
@@ -77,7 +77,7 @@
                 </div>
 
                 <!-- Email -->
-                <div class="mt-4">
+                <div class="mt-3">
                     <x-input-label for="email" :value="__('Email')" />
 
                     <x-text-input id="email" class="block mt-1 w-full rounded-lg" type="email" name="email"
@@ -87,7 +87,7 @@
                 </div>
 
                 <!-- Password -->
-                <div class="mt-4">
+                <div class="mt-3">
                     <x-input-label for="password" :value="__('Password')" />
 
                     <x-text-input id="password" class="block mt-1 w-full rounded-lg" type="password" name="password"
@@ -97,7 +97,7 @@
                 </div>
 
                 <!-- Confirm Password -->
-                <div class="mt-4">
+                <div class="mt-3">
                     <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
                     <x-text-input id="password_confirmation" class="block mt-1 w-full rounded-lg" type="password"
