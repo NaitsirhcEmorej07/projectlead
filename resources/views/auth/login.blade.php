@@ -14,11 +14,14 @@
 
             <!-- Heading -->
             <div class="text-center mb-6">
-                <h1 class="text-xl font-semibold text-gray-900">PROJECT LEAD</h1>
-                <h3 class="text-sm font-normal text-gray-500 mt-0 leading-tight">
+                <h1 class="text-xl font-semibold text-gray-900 tracking-wide">
+                    PROJECT LEAD
+                </h1>
+                <h3 class="text-sm text-gray-500 mt-0 leading-tight" style="font-family: 'Dancing Script', cursive;">
                     Worship team management, made simple.
                 </h3>
             </div>
+
 
 
             <!-- Session Status -->
@@ -72,7 +75,7 @@
                 <!-- Back to Landing -->
                 <div class="text-center mt-4 ">
                     <span class="text-sm text-gray-500">Don't have an account?</span>
-                    <a href="{{ url('/') }}" class="text-sm text-gray-700 underline hover:text-gray-900 ml-1">
+                    <a href="{{ url('/registration_page') }}" class="text-sm text-gray-700 underline hover:text-gray-900 ml-1">
                         Register
                     </a>
                 </div>

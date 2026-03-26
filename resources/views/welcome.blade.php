@@ -32,16 +32,17 @@
 
             <!-- Heading -->
             <div class="text-center mb-6">
-                <h1 class="text-xl font-semibold text-gray-900">PROJECT LEAD</h1>
-                <h3 class="text-sm font-normal text-gray-500 mt-0 leading-tight">
+                <h1 class="text-xl font-semibold text-gray-900 tracking-wide">
+                    PROJECT LEAD
+                </h1>
+                <h3 class="text-sm text-gray-500 mt-0 leading-tight" style="font-family: 'Dancing Script', cursive;">
                     Worship team management, made simple.
                 </h3>
             </div>
 
             <!-- Login Link -->
             <div class="text-center my-2">
-                <a href="{{ route('login') }}"
-                    class="text-sm text-gray-500 hover:text-gray-700 underline">
+                <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">
                     Already have an account? Login
                 </a>
             </div>
@@ -70,7 +71,7 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-white border">
-                                <i class="pi pi-shield text-gray-500 text-sm"></i>
+                                <i class="pi pi-shield text-blue-600 text-sm"></i>
                             </div>
                             <div>
                                 <h3 class="text-sm font-semibold text-gray-900">Admin</h3>
@@ -89,7 +90,7 @@
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-white border">
-                                <i class="pi pi-users text-gray-500 text-sm"></i>
+                                <i class="pi pi-users text-green-600 text-sm"></i>
                             </div>
                             <div>
                                 <h3 class="text-sm font-semibold text-gray-900">User</h3>

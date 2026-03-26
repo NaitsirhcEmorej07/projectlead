@@ -13,13 +13,13 @@
 
             <!-- Heading -->
             <div class="text-center mb-6">
-                <h1 class="text-xl font-semibold text-gray-900">
+                <h1 class="text-xl font-semibold text-gray-900 tracking-wide">
                     PROJECT LEAD
                 </h1>
-                <h3 class="text-sm font-normal text-gray-500 mt-0 leading-tight">
-                    Welcome Church Admin!
+                <h3 class="text-sm text-gray-500 mt-0 leading-tight" style="font-family: 'Dancing Script', cursive;">
+                    Worship team management, made simple.
                 </h3>
-                <h3 class="text-sm font-normal text-gray-500 mt-0 leading-tight">
+                <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
                     Please provide your church details below
                 </h3>
             </div>
@@ -28,7 +28,7 @@
                 @csrf
 
                 <input type="hidden" name="type" value="admin">
-                
+
                 <!-- Church Name -->
                 <div>
                     <x-input-label for="church_name" :value="__('Church Name')" />
