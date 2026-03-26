@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Church;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,32 +16,60 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
+    // Admin Register Page
     public function create(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws ValidationException
-     */
+    // Member Register Page
+    public function createUser(): View
+    {
+        $churches = Church::select('id', 'name', 'abbr')->get();
+
+        return view('auth.register-user', compact('churches'));
+    }
+
     public function store(Request $request): RedirectResponse
     {
+        // ✅ VALIDATION
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'type' => ['required', 'in:admin,member'],
+            'church_id' => ['nullable', 'exists:churches,id'],
         ]);
 
+        // ✅ CREATE USER FIRST
         $user = User::create([
-            'name' => $request->name,
+            'name' => $request->name ?? $request->church_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'type' => $request->type,
         ]);
+
+        // ✅ IF ADMIN → CREATE CHURCH
+        if ($request->type === 'admin') {
+
+            $church = Church::create([
+                'name' => $request->church_name,
+                'abbr' => $request->church_abbr
+                    ? strtoupper($request->church_abbr)
+                    : null,
+                'created_by' => $user->id,
+            ]);
+
+            // 🔥 assign church_id to admin
+            $user->church_id = $church->id;
+            $user->save();
+        }
+
+        // ✅ IF MEMBER → ASSIGN CHURCH
+        if ($request->type === 'member') {
+            $user->church_id = $request->church_id;
+            $user->save();
+        }
 
         event(new Registered($user));
 

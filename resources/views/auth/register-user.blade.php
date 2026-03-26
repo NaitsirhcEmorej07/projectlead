@@ -1,5 +1,25 @@
 <x-guest-layout>
 
+    <style>
+        .ts-control {
+            border-radius: 0.5rem !important;
+            padding: 10px !important;
+            border: 1px solid #d1d5db !important;
+        }
+
+        .ts-control:focus-within {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 1px #6366f1 !important;
+        }
+
+        .ts-control,
+        .ts-dropdown,
+        .ts-dropdown .option {
+            font-family: inherit !important;
+            font-size: 12x;
+        }
+    </style>
+
     <div class="min-h-screen flex items-center justify-center p-4 bg-gray-100">
 
         <!-- Card -->
@@ -17,56 +37,72 @@
                     PROJECT LEAD
                 </h1>
                 <h3 class="text-sm font-normal text-gray-500 mt-0 leading-tight">
-                    Welcome Church Admin!
+                    Welcome Worship Team!
                 </h3>
                 <h3 class="text-sm font-normal text-gray-500 mt-0 leading-tight">
-                    Please provide your church details below
+                    Select your church and create your account
                 </h3>
             </div>
 
             <form method="POST" action="{{ route('register') }}">
                 @csrf
 
-                <input type="hidden" name="type" value="admin">
-                
-                <!-- Church Name -->
+                <input type="hidden" name="type" value="member">
+
+                <!-- Church Selection -->
                 <div>
-                    <x-input-label for="church_name" :value="__('Church Name')" />
-                    <x-text-input id="church_name" class="block mt-1 w-full rounded-lg" type="text"
-                        name="church_name" :value="old('church_name')" required autofocus />
-                    <x-input-error :messages="$errors->get('church_name')" class="mt-2" />
+                    <x-input-label for="church" :value="__('Church')" />
+
+                    <select id="church_tom" name="church_id">
+                        <option value="">Select Church</option>
+
+                        @foreach ($churches as $church)
+                            <option value="{{ $church->id }}">
+                                {{ $church->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <x-input-error :messages="$errors->get('church_id')" class="mt-2" />
                 </div>
 
-                <!-- Church Abbreviation -->
+                <!-- Name -->
                 <div class="mt-4">
-                    <x-input-label for="church_abbr" :value="__('Church Abbreviation')" />
-                    <x-text-input id="church_abbr" class="block mt-1 w-full rounded-lg uppercase tracking-wider"
-                        type="text" name="church_abbr" :value="old('church_abbr')"
-                        oninput="this.value = this.value.toUpperCase()" required />
-                    <x-input-error :messages="$errors->get('church_abbr')" class="mt-2" />
+                    <x-input-label for="name" :value="__('Name')" />
+
+                    <x-text-input id="name" class="block mt-1 w-full rounded-lg" type="text" name="name"
+                        :value="old('name')" required autofocus />
+
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
 
                 <!-- Email -->
                 <div class="mt-4">
                     <x-input-label for="email" :value="__('Email')" />
+
                     <x-text-input id="email" class="block mt-1 w-full rounded-lg" type="email" name="email"
                         :value="old('email')" required />
+
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
                 <!-- Password -->
                 <div class="mt-4">
                     <x-input-label for="password" :value="__('Password')" />
+
                     <x-text-input id="password" class="block mt-1 w-full rounded-lg" type="password" name="password"
                         required />
+
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
                 <!-- Confirm Password -->
                 <div class="mt-4">
                     <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+
                     <x-text-input id="password_confirmation" class="block mt-1 w-full rounded-lg" type="password"
                         name="password_confirmation" required />
+
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
 
@@ -90,5 +126,17 @@
 
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        new TomSelect("#church_tom", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+    </script>
+
 
 </x-guest-layout>
