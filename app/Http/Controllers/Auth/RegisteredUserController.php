@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Church;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -35,7 +34,7 @@ class RegisteredUserController extends Controller
         // ✅ VALIDATION
         $request->validate([
             'name' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'type' => ['required', 'in:admin,member'],
             'church_id' => ['nullable', 'exists:churches,id'],
@@ -62,19 +61,31 @@ class RegisteredUserController extends Controller
 
             // 🔥 assign church_id to admin
             $user->church_id = $church->id;
+
+            // ✅ auto approve admin
+            $user->is_approved = 1;
+
             $user->save();
         }
 
         // ✅ IF MEMBER → ASSIGN CHURCH
         if ($request->type === 'member') {
             $user->church_id = $request->church_id;
+
+            // ❌ not approved by default
+            $user->is_approved = 0;
+
             $user->save();
         }
 
         event(new Registered($user));
 
-        Auth::login($user);
+        if ($user->type === 'admin') {
+            Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+            return redirect()->route('dashboard');
+        }
+
+        return back()->with('success', 'Thank you for registration. Please wait for your church admin approval before logging in.');
     }
 }

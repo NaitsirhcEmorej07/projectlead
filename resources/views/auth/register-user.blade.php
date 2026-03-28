@@ -16,7 +16,23 @@
         .ts-dropdown,
         .ts-dropdown .option {
             font-family: inherit !important;
-            font-size: 14x;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.2s ease-out;
         }
     </style>
 
@@ -126,6 +142,27 @@
 
         </div>
     </div>
+
+    @if (session('success'))
+        <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+
+            <div class="bg-white rounded-2xl shadow-lg max-w-sm w-full p-6 text-center animate-fadeIn">
+
+                <h2 class="text-lg font-semibold text-gray-800 mb-2">
+                    Registration Successful 🎉
+                </h2>
+
+                <p class="text-sm text-gray-600 mb-4">
+                    {{ session('success') }}
+                </p>
+
+                <x-primary-button onclick="window.location.href='{{ route('login') }}'">
+                    OK
+                </x-primary-button>
+            </div>
+        </div>
+    @endif
+
 
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script>
