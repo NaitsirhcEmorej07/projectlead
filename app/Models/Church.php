@@ -10,6 +10,7 @@ class Church extends Model
         'name',
         'abbr',
         'created_by',
+        'logo',
     ];
 
     public function users()

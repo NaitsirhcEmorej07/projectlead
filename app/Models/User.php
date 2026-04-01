@@ -25,6 +25,7 @@ class User extends Authenticatable
         'church_abbr',
         'type',
         'is_approved',
+        'logo',
     ];
 
     /**
