@@ -10,45 +10,53 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    // Admin Register Page
+    // ✅ Admin Register Page
     public function create(): View
     {
         return view('auth.register');
     }
 
-    // Member Register Page
+    // ✅ User Register Page
     public function createUser(): View
     {
-        $churches = Church::select('id', 'name', 'abbr')->get();
+        $churches = Church::select('id', 'name')->get();
 
         return view('auth.register-user', compact('churches'));
     }
 
+    // ✅ Store (ADMIN and USER)
     public function store(Request $request): RedirectResponse
     {
         // ✅ VALIDATION
         $request->validate([
             'name' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'confirmed'],
             'type' => ['required', 'in:admin,member'],
-            'church_id' => ['nullable', 'exists:churches,id'],
+
+            // admin fields
+            'church_name' => ['required_if:type,admin', 'string', 'max:255'],
+            'church_abbr' => ['nullable', 'string', 'max:50'],
+
+            // member fields
+            'churches' => ['required_if:type,member', 'array'],
+            'churches.*' => ['exists:churches,id'],
         ]);
 
-        // ✅ CREATE USER FIRST
+        // ✅ CREATE USER
         $user = User::create([
             'name' => $request->name ?? $request->church_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'type' => $request->type,
+            'is_approved' => $request->type === 'admin' ? 1 : 0,
         ]);
 
-        // ✅ IF ADMIN → CREATE CHURCH
+        // 🔥 ADMIN FLOW
         if ($request->type === 'admin') {
 
             $church = Church::create([
@@ -59,33 +67,25 @@ class RegisteredUserController extends Controller
                 'created_by' => $user->id,
             ]);
 
-            // 🔥 assign church_id to admin
-            $user->church_id = $church->id;
-
-            // ✅ auto approve admin
-            $user->is_approved = 1;
-
-            $user->save();
+            // connect
+            $user->churches()->attach($church->id);
         }
 
-        // ✅ IF MEMBER → ASSIGN CHURCH
+        // 🔥 MEMBER FLOW (MULTI SELECT)
         if ($request->type === 'member') {
-            $user->church_id = $request->church_id;
 
-            // ❌ not approved by default
-            $user->is_approved = 0;
-
-            $user->save();
+            // attach multiple churches
+            $user->churches()->attach($request->churches);
         }
 
         event(new Registered($user));
 
+        // ✅ AUTO LOGIN ADMIN ONLY
         if ($user->type === 'admin') {
             Auth::login($user);
-
             return redirect()->route('dashboard');
         }
 
-        return back()->with('success', 'Thank you for registration. Please wait for your church admin approval before logging in.');
+        return back()->with('success', 'Registered! Wait for admin approval.');
     }
 }

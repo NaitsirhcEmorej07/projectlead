@@ -1,0 +1,2 @@
+// Reset user and churches data 
+php artisan reset:data

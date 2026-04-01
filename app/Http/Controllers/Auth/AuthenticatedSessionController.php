@@ -28,6 +28,16 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // 👉 Check if approved
+        if (!Auth::user()->is_approved) {
+
+            Auth::logout();
+
+            return back()->withErrors([
+                'email' => 'Your account is not approved yet.',
+            ])->onlyInput('email');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

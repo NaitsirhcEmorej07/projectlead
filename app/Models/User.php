@@ -24,6 +24,7 @@ class User extends Authenticatable
         'church_name',
         'church_abbr',
         'type',
+        'is_approved',
     ];
 
     /**
@@ -47,5 +48,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function churches()
+    {
+        return $this->belongsToMany(Church::class)->withTimestamps();
     }
 }

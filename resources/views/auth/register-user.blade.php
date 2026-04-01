@@ -69,9 +69,7 @@
                 <div>
                     <x-input-label for="church" :value="__('Church Name')" />
 
-                    <select id="church_tom" name="church_id">
-                        <option value="">Select Church</option>
-
+                    <select id="church_tom" name="churches[]" multiple>
                         @foreach ($churches as $church)
                             <option value="{{ $church->id }}">
                                 {{ $church->name }}
@@ -171,7 +169,9 @@
             sortField: {
                 field: "text",
                 direction: "asc"
-            }
+            },
+            plugins: ['remove_button'],
+            placeholder: "Select churches...",
         });
     </script>
 
