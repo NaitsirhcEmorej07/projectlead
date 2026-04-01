@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
@@ -40,8 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
     Route::get('/worship-team', fn() => view('worship-team'))->name('worship-team');
     Route::get('/worship-schedule', fn() => view('worship-schedule'))->name('worship-schedule');
-    Route::get('/approval', fn() => view('approval.index'))->name('approval');
 
+    Route::get('/approval', [ApprovalController::class, 'index'])->name('approval');
+    Route::post('/approval/{user}/approve', [ApprovalController::class, 'approve'])->name('approval.approve');
+    Route::post('/approval/{user}/decline', [ApprovalController::class, 'decline'])->name('approval.decline');
 
     // PROFILE ----------------------------------------------------------------------------------------------
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

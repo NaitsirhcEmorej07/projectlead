@@ -71,6 +71,9 @@ class RegisteredUserController extends Controller
                 'is_approved' => 1,
                 'type' => 'admin',
             ]);
+
+            // ✅ ADD THIS LINE
+            session(['church_id' => $church->id]);
         }
 
         // 🔥 MEMBER FLOW (MULTI SELECT)
@@ -89,6 +92,7 @@ class RegisteredUserController extends Controller
 
         // ✅ AUTO LOGIN ADMIN ONLY
         if ($user->type === 'admin') {
+            session(['church_id' => $church->id]);
             Auth::login($user);
             return redirect()->route('worship-team');
         }

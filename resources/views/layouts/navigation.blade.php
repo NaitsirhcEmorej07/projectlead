@@ -8,7 +8,9 @@
                     <a href="{{ route('worship-team') }}" class="flex items-center space-x-2">
 
                         @php
-                            $church = Auth::user()->churches()->where('church_id', session('church_id'))->first();
+                            $church =
+                                Auth::user()->churches()->where('church_id', session('church_id'))->first() ??
+                                Auth::user()->churches()->first();
                         @endphp
 
                         @if ($church && $church->logo)
@@ -21,7 +23,7 @@
                         @endif
 
                         <!-- Church Name -->
-                        <span class="text-sm font-semibold text-gray-700">
+                        <span class="text-sm font-semibold text-gray-700 break-words line-clamp-2">
                             {{ $church->name ?? 'No Church' }}
                         </span>
 
@@ -77,6 +79,15 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile Settings') }}
                         </x-dropdown-link>
+
+                        @auth
+                            @if (auth()->user()->churches->count() > 1)
+                                <x-dropdown-link :href="route('select-church')">
+                                    {{ __('Church Selection') }}
+                                </x-dropdown-link>
+                            @endif
+                        @endauth
+
 
                         <x-dropdown-link :href="route('approval')">
                             {{ __('Approval Settings') }}
@@ -152,6 +163,15 @@
             <x-responsive-nav-link :href="route('profile.edit')">
                 Profile Settings
             </x-responsive-nav-link>
+
+            @auth
+                @if (auth()->user()->churches()->count() > 1)
+                    <x-responsive-nav-link :href="route('select-church')">
+                        Church Selection
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
+
 
             <!-- Profile -->
             <x-responsive-nav-link :href="route('approval')">
