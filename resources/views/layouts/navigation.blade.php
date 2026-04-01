@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center space-x-2">
-                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
+                    <a href="{{ route('worship-team') }}" class="flex items-center space-x-2">
 
                         @php
                             $church = Auth::user()->churches()->orderBy('church_user.created_at')->first();
@@ -29,9 +29,27 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('events')" :active="request()->routeIs('events')">
+                        {{ __('Events') }}
+                    </x-nav-link>
+                </div> --}}
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('worship-team')" :active="request()->routeIs('worship-team')">
+                        {{ __('Worship Team') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('worship-schedule')" :active="request()->routeIs('worship-schedule')">
+                        {{ __('Worship Schedule') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -57,7 +75,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Profile Settings') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -105,8 +123,20 @@
             <div class="border-t my-2"></div>
 
             <!-- Menu -->
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            {{-- <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 Dashboard
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('events')" :active="request()->routeIs('events')">
+                Events
+            </x-responsive-nav-link> --}}
+
+            <x-responsive-nav-link :href="route('worship-team')" :active="request()->routeIs('worship-team')">
+                Worship Teams
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('worship-schedule')" :active="request()->routeIs('worship-schedule')">
+                Worship Schedule
             </x-responsive-nav-link>
 
             <!-- Divider -->
@@ -114,7 +144,7 @@
 
             <!-- Profile -->
             <x-responsive-nav-link :href="route('profile.edit')">
-                Profile
+                Profile Settings
             </x-responsive-nav-link>
 
             <!-- Logout -->

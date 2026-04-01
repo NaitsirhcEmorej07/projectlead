@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
             ])->onlyInput('email');
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('worship-team', absolute: false));
     }
 
     /**

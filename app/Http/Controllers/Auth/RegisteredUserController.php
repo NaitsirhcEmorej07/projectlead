@@ -83,7 +83,7 @@ class RegisteredUserController extends Controller
         // ✅ AUTO LOGIN ADMIN ONLY
         if ($user->type === 'admin') {
             Auth::login($user);
-            return redirect()->route('dashboard');
+            return redirect()->route('worship-team');
         }
 
         return back()->with('success', 'Registered! Wait for admin approval.');

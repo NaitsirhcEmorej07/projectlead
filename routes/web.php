@@ -10,11 +10,13 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('l
 Route::view('/registration_page', 'welcome')->name('registration.page');
 Route::get('/register-user', [RegisteredUserController::class, 'createUser'])->name('register.user');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+
+    // Route::get('/events', function () {return view('events');})->name('events');
+    Route::get('/worship-team', function () {return view('worship-team');})->name('worship-team');
+    Route::get('/worship-schedule', function () {return view('worship-schedule');})->name('worship-schedule');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
