@@ -8,7 +8,7 @@
                     <a href="{{ route('worship-team') }}" class="flex items-center space-x-2">
 
                         @php
-                            $church = Auth::user()->churches()->orderBy('church_user.created_at')->first();
+                            $church = Auth::user()->churches()->where('church_id', session('church_id'))->first();
                         @endphp
 
                         @if ($church && $church->logo)
@@ -78,6 +78,12 @@
                             {{ __('Profile Settings') }}
                         </x-dropdown-link>
 
+                        <x-dropdown-link :href="route('approval')">
+                            {{ __('Approval Settings') }}
+                        </x-dropdown-link>
+
+
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -146,6 +152,12 @@
             <x-responsive-nav-link :href="route('profile.edit')">
                 Profile Settings
             </x-responsive-nav-link>
+
+            <!-- Profile -->
+            <x-responsive-nav-link :href="route('approval')">
+                Approval Settings
+            </x-responsive-nav-link>
+
 
             <!-- Logout -->
             <form method="POST" action="{{ route('logout') }}">

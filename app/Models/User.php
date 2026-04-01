@@ -24,7 +24,6 @@ class User extends Authenticatable
         'church_name',
         'church_abbr',
         'type',
-        'is_approved',
         'logo',
     ];
 
@@ -53,6 +52,8 @@ class User extends Authenticatable
 
     public function churches()
     {
-        return $this->belongsToMany(Church::class)->withTimestamps();
+        return $this->belongsToMany(Church::class)
+            ->withPivot('is_approved', 'type')
+            ->withTimestamps();
     }
 }

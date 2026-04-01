@@ -28,17 +28,32 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // 👉 Check if approved
-        if (!Auth::user()->is_approved) {
+        $user = Auth::user();
 
+        // ✅ get approved churches
+        $approvedChurches = $user->churches()
+            ->wherePivot('is_approved', 1)
+            ->get();
+
+        if ($approvedChurches->isEmpty()) {
             Auth::logout();
 
             return back()->withErrors([
-                'email' => 'Your account is not approved yet.',
+                'email' => 'You are not approved in any church.',
             ])->onlyInput('email');
         }
 
-        return redirect()->intended(route('worship-team', absolute: false));
+        // ✅ if only 1 → auto select
+        if ($approvedChurches->count() === 1) {
+            session(['church_id' => $approvedChurches->first()->id]);
+
+            return redirect()->intended(route('worship-team'));
+        }
+
+        // 🔥 if multiple → show selection page
+        session(['select_church_user_id' => $user->id]);
+
+        return redirect()->route('select-church');
     }
 
     /**

@@ -47,13 +47,12 @@ class RegisteredUserController extends Controller
             'churches.*' => ['exists:churches,id'],
         ]);
 
-        // ✅ CREATE USER
+        // ✅ CREATE USER (NO is_approved HERE ❌)
         $user = User::create([
             'name' => $request->name ?? $request->church_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'type' => $request->type,
-            'is_approved' => $request->type === 'admin' ? 1 : 0,
         ]);
 
         // 🔥 ADMIN FLOW
@@ -67,15 +66,23 @@ class RegisteredUserController extends Controller
                 'created_by' => $user->id,
             ]);
 
-            // connect
-            $user->churches()->attach($church->id);
+            // ✅ attach with pivot data
+            $user->churches()->attach($church->id, [
+                'is_approved' => 1,
+                'type' => 'admin',
+            ]);
         }
 
         // 🔥 MEMBER FLOW (MULTI SELECT)
         if ($request->type === 'member') {
 
-            // attach multiple churches
-            $user->churches()->attach($request->churches);
+            // ✅ attach multiple with pivot data
+            foreach ($request->churches as $churchId) {
+                $user->churches()->attach($churchId, [
+                    'is_approved' => 0,
+                    'type' => 'member',
+                ]);
+            }
         }
 
         event(new Registered($user));
