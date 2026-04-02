@@ -15,7 +15,7 @@
 
                         @if ($church && $church->logo)
                             <!-- Actual Church Logo -->
-                            <img src="{{ asset('storage/' . $church->logo) }}" alt="Church Logo"
+                            <img src="{{ Storage::url($church->logo) }}" alt="Church Logo"
                                 class="h-9 w-9 object-cover rounded-full">
                         @else
                             <!-- Default App Logo -->
