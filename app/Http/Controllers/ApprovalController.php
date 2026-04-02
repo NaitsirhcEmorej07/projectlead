@@ -17,21 +17,17 @@ class ApprovalController extends Controller
             return redirect()->route('login');
         }
 
-        $churchId = session('church_id');
+        $church = $user->churches()->first();
 
-        if (!$churchId) {
-            return redirect()->route('select-church')
-                ->with('error', 'Select a church first.');
+        if (!$church) {
+            return view('approval.index', ['users' => collect()]);
         }
 
-        $church = $user->churches()
-            ->where('church_id', $churchId)
-            ->first();
-
-        if (!$church || $church->pivot->role !== 'admin') {
-            abort(403);
+        // 🔒 ADMIN ONLY (using 'type')
+        if (strtolower($church->pivot->type ?? '') !== 'admin') {
+            return redirect()->route('worship-team')
+                ->with('error', 'Access denied. Admins only.');
         }
-
         $users = $church->users()
             ->wherePivot('is_approved', 0)
             ->get();
