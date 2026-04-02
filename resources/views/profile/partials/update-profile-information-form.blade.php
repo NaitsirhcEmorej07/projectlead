@@ -18,7 +18,13 @@
         @method('patch')
 
         <!-- LOGO UPLOAD -->
-        <div x-data="{ preview: '{{ $user->churches->first()?->logo ? asset('storage/' . $user->churches->first()->logo) : '' }}' }">
+        @php
+            $church = $user->churches->first();
+        @endphp
+
+        <div x-data="{
+            preview: @js($church?->logo ? Storage::url($church->logo) : '')
+        }">
             {{-- <x-input-label for="logo" :value="__('Profile Logo')" /> --}}
 
             <div class="mt-4 flex justify-center">

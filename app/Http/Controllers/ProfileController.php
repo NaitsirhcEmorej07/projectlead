@@ -63,7 +63,7 @@ class ProfileController extends Controller
                     Storage::disk('public')->delete($church->logo);
                 }
 
-                $path = $request->file('logo')->store('church-logos', 'public');
+                $path = $request->file('logo')->storePublicly('church-logos');
                 $church->logo = $path;
             }
 
