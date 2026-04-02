@@ -65,4 +65,13 @@ class User extends Authenticatable
 
         return $church && strtolower($church->pivot->type ?? '') === 'admin';
     }
+
+    public function isUser($churchId)
+    {
+        $church = $this->churches()
+            ->where('church_id', $churchId)
+            ->first();
+
+        return $church && strtolower($church->pivot->type ?? '') === 'user';
+    }
 }

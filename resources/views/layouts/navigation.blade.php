@@ -89,11 +89,11 @@
                         @endauth
 
 
-                        @if (Auth::user()?->isAdmin(session('church_id')))
+                        @churchAdmin
                             <x-dropdown-link :href="route('approval')">
                                 {{ __('Approval Settings') }}
                             </x-dropdown-link>
-                        @endif
+                        @endchurchAdmin
 
 
 
@@ -175,12 +175,11 @@
             @endauth
 
 
-            @if (Auth::user()?->isAdmin(session('church_id')))
-                <!-- Profile -->
+            @churchAdmin
                 <x-responsive-nav-link :href="route('approval')">
                     Approval Settings
                 </x-responsive-nav-link>
-            @endif
+            @endchurchAdmin
 
 
             <!-- Logout -->
