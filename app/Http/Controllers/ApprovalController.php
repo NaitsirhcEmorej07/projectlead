@@ -17,10 +17,19 @@ class ApprovalController extends Controller
             return redirect()->route('login');
         }
 
-        $church = $user->churches()->first();
+        $churchId = session('church_id');
 
-        if (!$church) {
-            return view('approval.index', ['users' => collect()]);
+        if (!$churchId) {
+            return redirect()->route('select-church')
+                ->with('error', 'Select a church first.');
+        }
+
+        $church = $user->churches()
+            ->where('church_id', $churchId)
+            ->first();
+
+        if (!$church || $church->pivot->role !== 'admin') {
+            abort(403);
         }
 
         $users = $church->users()
