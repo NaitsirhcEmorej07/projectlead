@@ -4,7 +4,7 @@
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                 <div class="p-4 sm:p-6 text-gray-900">
 
-                    <h2 class="text-lg font-semibold mb-4">Pending Approvals</h2>
+                    <h2 class="text-md font-semibold mb-4">Pending Approvals</h2>
 
                     <div class="overflow-x-auto">
                         <div class="space-y-3">
