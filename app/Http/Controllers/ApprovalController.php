@@ -23,11 +23,6 @@ class ApprovalController extends Controller
             return view('approval.index', ['users' => collect()]);
         }
 
-        // 🔒 ADMIN ONLY (using 'type')
-        if (strtolower($church->pivot->type ?? '') !== 'admin') {
-            return redirect()->route('worship-team')
-                ->with('error', 'Access denied. Admins only.');
-        }
         $users = $church->users()
             ->wherePivot('is_approved', 0)
             ->get();

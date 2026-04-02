@@ -89,9 +89,11 @@
                         @endauth
 
 
-                        <x-dropdown-link :href="route('approval')">
-                            {{ __('Approval Settings') }}
-                        </x-dropdown-link>
+                        @if (Auth::user()?->isAdmin(session('church_id')))
+                            <x-dropdown-link :href="route('approval')">
+                                {{ __('Approval Settings') }}
+                            </x-dropdown-link>
+                        @endif
 
 
 
@@ -173,10 +175,12 @@
             @endauth
 
 
-            <!-- Profile -->
-            <x-responsive-nav-link :href="route('approval')">
-                Approval Settings
-            </x-responsive-nav-link>
+            @if (Auth::user()?->isAdmin(session('church_id')))
+                <!-- Profile -->
+                <x-responsive-nav-link :href="route('approval')">
+                    Approval Settings
+                </x-responsive-nav-link>
+            @endif
 
 
             <!-- Logout -->

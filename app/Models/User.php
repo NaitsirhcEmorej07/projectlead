@@ -56,4 +56,13 @@ class User extends Authenticatable
             ->withPivot('is_approved', 'type')
             ->withTimestamps();
     }
+
+    public function isAdmin($churchId)
+    {
+        $church = $this->churches()
+            ->where('church_id', $churchId)
+            ->first();
+
+        return $church && strtolower($church->pivot->type ?? '') === 'admin';
+    }
 }

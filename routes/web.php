@@ -42,9 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/worship-team', fn() => view('worship-team'))->name('worship-team');
     Route::get('/worship-schedule', fn() => view('worship-schedule'))->name('worship-schedule');
 
-    Route::get('/approval', [ApprovalController::class, 'index'])->name('approval');
-    Route::post('/approval/{user}/approve', [ApprovalController::class, 'approve'])->name('approval.approve');
-    Route::post('/approval/{user}/decline', [ApprovalController::class, 'decline'])->name('approval.decline');
+    Route::get('/approval', [ApprovalController::class, 'index'])->middleware(['church.admin'])->name('approval');
+    Route::post('/approval/{user}/approve', [ApprovalController::class, 'approve'])->middleware(['church.admin'])->name('approval.approve');
+    Route::post('/approval/{user}/decline', [ApprovalController::class, 'decline'])->middleware(['church.admin'])->name('approval.decline');
 
     // PROFILE ----------------------------------------------------------------------------------------------
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

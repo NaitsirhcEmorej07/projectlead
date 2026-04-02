@@ -31,7 +31,8 @@
                                     <div class="flex gap-3 items-center">
 
                                         <!-- APPROVE -->
-                                        <form method="POST" action="{{ route('approval.approve', $user->id) }}">
+                                        <form method="POST" action="{{ route('approval.approve', $user->id) }}"
+                                            onsubmit="return confirm('Approve this user?')">
                                             @csrf
                                             <button class="text-black-500 hover:text-green-700 transition text-lg">
                                                 <i class="pi pi-check"></i>
@@ -39,7 +40,8 @@
                                         </form>
 
                                         <!-- DECLINE -->
-                                        <form method="POST" action="{{ route('approval.decline', $user->id) }}">
+                                        <form method="POST" action="{{ route('approval.decline', $user->id) }}"
+                                            onsubmit="return confirm('Decline this user?')">
                                             @csrf
                                             <button class="text-black-500 hover:text-red-700 transition text-lg">
                                                 <i class="pi pi-times"></i>
