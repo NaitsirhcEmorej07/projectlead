@@ -4,6 +4,9 @@ use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WorshipTeamController;
+use App\Http\Controllers\SongController;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -39,12 +42,23 @@ Route::middleware('auth')->group(function () {
 
     // MAIN APP ---------------------------------------------------------------------------------------------
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
-    Route::get('/worship-team', fn() => view('worship-team'))->name('worship-team');
+
     Route::get('/worship-schedule', fn() => view('worship-schedule'))->name('worship-schedule');
 
+    // APPROVAL ----------------------------------------------------------------------------------------------
     Route::get('/approval', [ApprovalController::class, 'index'])->middleware(['church.admin'])->name('approval');
     Route::post('/approval/{user}/approve', [ApprovalController::class, 'approve'])->middleware(['church.admin'])->name('approval.approve');
     Route::post('/approval/{user}/decline', [ApprovalController::class, 'decline'])->middleware(['church.admin'])->name('approval.decline');
+
+    // SONG ----------------------------------------------------------------------------------------------
+    Route::get('/songs', [SongController::class, 'index'])->name('songs.index');
+    Route::post('/songs', [SongController::class, 'store'])->name('songs.store');
+    Route::put('/songs/{id}', [SongController::class, 'update'])->name('songs.update');
+    Route::delete('/songs/{id}', [SongController::class, 'destroy'])->name('songs.destroy');
+
+    // WORSHIP TEAM ----------------------------------------------------------------------------------------------
+    Route::get('/worship-team', [WorshipTeamController::class, 'index'])->name('worship-team');
+
 
     // PROFILE ----------------------------------------------------------------------------------------------
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

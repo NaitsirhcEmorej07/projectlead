@@ -16,12 +16,12 @@
                 <h1 class="text-xl font-semibold text-gray-900 tracking-wide">
                     PROJECT LEAD
                 </h1>
-                <h3 class="text-sm text-gray-500 mt-0 leading-tight" style="font-family: 'Dancing Script', cursive;">
+                <h3 class="text-sm text-gray-500 mt-0 leading-tight">
                     Worship team management, made simple.
                 </h3>
-                <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
+                {{-- <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
                     Reset your password
-                </h3>
+                </h3> --}}
             </div>
 
             <!-- Session Status -->
@@ -32,7 +32,7 @@
 
                 <!-- Email -->
                 <div>
-                    <x-input-label for="email" :value="__('Email')" />
+                    <x-input-label for="email" :value="__('Enter email')" />
                     <x-text-input id="email" class="block mt-1 w-full rounded-lg" type="email" name="email"
                         :value="old('email')" required autofocus />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -45,6 +45,7 @@
                     </x-primary-button>
                 </div>
 
+                
                 <!-- Back -->
                 <div class="text-center mt-4">
                     <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">

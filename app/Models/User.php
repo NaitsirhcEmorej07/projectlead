@@ -25,6 +25,9 @@ class User extends Authenticatable
         'church_abbr',
         'type',
         'logo',
+        'profile_picture',
+        'contact_number',
+        'describe',
     ];
 
     /**
@@ -72,6 +75,14 @@ class User extends Authenticatable
             ->where('church_id', $churchId)
             ->first();
 
-        return $church && strtolower($church->pivot->type ?? '') === 'user';
+        return $church && strtolower($church->pivot->type ?? '') === 'member';
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(
+            \App\Models\RoleSelect::class,
+            'role_user'
+        );
     }
 }

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EnsureChurchAdmin
+class EnsureChurchUser
 {
     public function handle(Request $request, Closure $next)
     {
@@ -30,10 +30,10 @@ class EnsureChurchAdmin
             ->where('church_id', $churchId)
             ->first();
 
-        // 🔒 ADMIN CHECK
-        if (!$church || strtolower($church->pivot->type ?? '') !== 'admin') {
+        // 🔒 USER / MEMBER CHECK
+        if (!$church || strtolower($church->pivot->type ?? '') !== 'member') {
             return redirect()->route('worship-team')
-                ->with('error', 'Admins only.');
+                ->with('error', 'Members only.');
         }
 
         // ✅ Allow access

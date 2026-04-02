@@ -40,7 +40,7 @@
                 </h3>
             </div>
 
-            <!-- Login Link -->
+            {{-- <!-- Login Link -->
             <div class="text-center my-2">
                 <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">
                     Already have an account? Login
@@ -52,17 +52,17 @@
                 <div class="flex-1 border-t border-gray-200"></div>
                 <span class="px-3 text-xs text-gray-400 uppercase tracking-wide">or</span>
                 <div class="flex-1 border-t border-gray-200"></div>
-            </div>
+            </div> --}}
 
             <!-- Register Text -->
-            <div class="text-center mt-2 mb-6">
+            <div class="text-center mt-2 mb-3">
                 <p class="text-sm text-gray-500">
-                    Create a new account below
+                    Select type of account below:
                 </p>
             </div>
 
             <!-- Options -->
-            <div class="space-y-4">
+            <div class="space-y-3">
 
                 <!-- Admin Card -->
                 <a href="{{ route('register') }}" class="block">
@@ -104,9 +104,18 @@
                 </a>
             </div>
 
+
+
+            <div class="text-center mt-3">
+                <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">
+                    Back to login
+                </a>
+            </div>
+
             <div class="text-center mt-6">
                 <h3 class="text-xs font-normal italic text-gray-500 mt-4 leading-tight">
-                    "A worship team management app that organize team members, manage lineups, and plan schedules—keeping
+                    "A worship team management app that organize team members, manage lineups, and plan
+                    schedules—keeping
                     your team aligned for every service."
                 </h3>
             </div>

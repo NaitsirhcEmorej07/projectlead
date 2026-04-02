@@ -93,6 +93,10 @@
                             <x-dropdown-link :href="route('approval')">
                                 {{ __('Approval Settings') }}
                             </x-dropdown-link>
+
+                            <x-dropdown-link :href="route('songs.index')">
+                                {{ __('Song Settings') }}
+                            </x-dropdown-link>
                         @endchurchAdmin
 
 
@@ -178,6 +182,10 @@
             @churchAdmin
                 <x-responsive-nav-link :href="route('approval')">
                     Approval Settings
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('songs.index')">
+                    Song Settings
                 </x-responsive-nav-link>
             @endchurchAdmin
 

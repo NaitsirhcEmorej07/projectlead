@@ -52,7 +52,7 @@
                 <h1 class="text-xl font-semibold text-gray-900 tracking-wide">
                     USER REGISTRATION
                 </h1>
-                <h3 class="text-sm text-gray-500 mt-0 leading-tight" style="font-family: 'Dancing Script', cursive;">
+                <h3 class="text-sm text-gray-500 mt-0 leading-tight">
                     Worship team management, made simple.
                 </h3>
                 {{-- <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
@@ -123,7 +123,7 @@
                 <!-- Actions -->
                 <div class="flex items-center justify-between mt-6">
                     <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">
-                        Already have an account?
+                        Back to login
                     </a>
 
                     <x-primary-button class="rounded-lg px-6">
@@ -142,7 +142,20 @@
     </div>
 
     @if (session('success'))
-        <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+            x-data="{
+                seconds: 10,
+                disabled: true,
+                start() {
+                    let timer = setInterval(() => {
+                        this.seconds--;
+                        if (this.seconds <= 0) {
+                            this.disabled = false;
+                            clearInterval(timer);
+                        }
+                    }, 1000);
+                }
+            }" x-init="start()">
 
             <div class="bg-white rounded-2xl shadow-lg max-w-sm w-full p-6 text-center animate-fadeIn">
 
@@ -154,9 +167,18 @@
                     {{ session('success') }}
                 </p>
 
-                <x-primary-button onclick="window.location.href='{{ route('login') }}'">
+                <!-- Countdown Text -->
+                <p class="text-xs text-gray-500 mb-3" x-show="disabled">
+                    Please wait <span x-text="seconds"></span> seconds...
+                </p>
+
+                <!-- Button -->
+                <x-primary-button x-bind:disabled="disabled"
+                    x-bind:class="disabled ? 'opacity-50 cursor-not-allowed' : ''"
+                    @click="if(!disabled) window.location.href='{{ route('login') }}'">
                     OK
                 </x-primary-button>
+
             </div>
         </div>
     @endif
