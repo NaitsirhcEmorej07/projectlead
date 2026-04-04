@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\SongSelect;
+use App\Models\SongUser;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,10 +29,28 @@ class ProfileController extends Controller
         // 🔥 Get user selected roles
         $userRoleIds = $user->roles()->pluck('role_select.id')->toArray();
 
+        // 🔥 ADD THIS (songs for autocomplete)
+        $churchId = session('church_id');
+
+        $songs = SongSelect::select(
+            'id',
+            'song_title',
+            'song_by',
+            'song_reference',
+            'original_key'
+        )
+            ->where('church_id', $churchId)
+            ->get();
+
+        $userSongs = SongUser::where('user_id', $user->id)->get();
+
+
         return view('profile.edit', [
             'user' => $user,
             'roles' => $roles,
             'userRoleIds' => $userRoleIds,
+            'songs' => $songs,
+            'userSongs' => $userSongs, // 👈 ADD THIS
         ]);
     }
 
@@ -50,7 +71,7 @@ class ProfileController extends Controller
             'logo' => ['nullable', 'image', 'max:2048'],
             'contact_number' => ['nullable', 'string', 'max:20'],
             'describe' => ['nullable', 'string', 'max:1000'],
-            'roles' => ['nullable', 'array'], // 🔥 ADD
+            'roles' => ['nullable', 'array'],
         ]);
 
         // =========================
@@ -145,5 +166,75 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+
+    public function storeSong(Request $request)
+    {
+        $request->validate([
+            'song_title' => 'required|string|max:255',
+            'song_by' => 'nullable|string|max:255',
+            'song_reference' => 'nullable|string|max:255',
+            'user_key' => 'nullable|string|max:10',
+        ]);
+
+        $user = Auth::user();
+
+        $song = SongUser::create([
+            'user_id' => $user->id,
+            'church_id' => session('church_id') ?? null,
+            'song_title' => $request->song_title,
+            'song_by' => $request->song_by,
+            'song_reference' => $request->song_reference,
+            'user_key' => $request->user_key,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $song
+        ]);
+    }
+
+    public function updateSong(Request $request, $id)
+    {
+        $request->validate([
+            'song_title' => 'required|string|max:255',
+            'song_by' => 'nullable|string|max:255',
+            'song_reference' => 'nullable|string|max:255',
+            'user_key' => 'nullable|string|max:10',
+        ]);
+
+        $user = Auth::user();
+
+        $song = SongUser::where('id', $id)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        $song->update([
+            'song_title' => $request->song_title,
+            'song_by' => $request->song_by,
+            'song_reference' => $request->song_reference,
+            'user_key' => $request->user_key,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $song
+        ]);
+    }
+
+    public function deleteSong($id)
+    {
+        $user = Auth::user();
+
+        $song = SongUser::where('id', $id)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        $song->delete();
+
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
 }

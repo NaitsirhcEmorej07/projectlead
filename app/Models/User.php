@@ -85,4 +85,6 @@ class User extends Authenticatable
             'role_user'
         );
     }
+
+    
 }

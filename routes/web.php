@@ -64,6 +64,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/profile-song/store', [ProfileController::class, 'storeSong'])->name('profile-song.store');
+    Route::put('/profile-song/update/{id}', [ProfileController::class, 'updateSong'])->name('profile-song.update');
+    Route::delete('/profile-song/delete/{id}', [ProfileController::class, 'deleteSong'])->name('profile-song.delete');
 });
 
 
