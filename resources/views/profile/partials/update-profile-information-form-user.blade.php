@@ -116,7 +116,8 @@
                     :value="old('contact_number', $user->contact_number)" />
             </div>
 
-            <!-- DESCRIPTION -->
+            <!-- DESCRIPTION -->eb
+
             <div class="mb-3">
                 <x-input-label value="Share your Story" />
                 <textarea name="describe" class="block w-full border-gray-300 rounded-md text-sm mt-1" rows="8">{{ old('describe', $user->describe) }}</textarea>
@@ -206,8 +207,12 @@
 
             <!-- SONG CARDS (DYNAMIC) -->
             <div class="grid grid-cols-1 gap-2">
-
-                <template x-for="(song, index) in userSongs" :key="song.id">
+            {{-- <div class="grid grid-cols-2 sm:grid-cols-2 gap-2"> --}}
+                <template
+                    x-for="(song, index) in [...userSongs].sort((a, b) => 
+                                a.song_title.toLowerCase().localeCompare(b.song_title.toLowerCase())
+                            )"
+                    :key="song.id">
                     <div class="border rounded-lg p-2 hover:shadow transition">
 
                         <div class="flex justify-between items-center">
@@ -221,8 +226,11 @@
                                     By: <span x-text="song.song_by"></span>
                                 </div>
 
-                                <div class="text-xs text-gray-500">
-                                    My key: <span x-text="song.user_key"></span>
+                                <div class="text-xs text-gray-600 flex items-center gap-1">
+                                    <span class="text-gray-400">My Key:</span>
+                                    <span class="px-2 py-0.5 rounded-full font-semibold bg-blue-100 text-blue-700"
+                                        x-text="song.user_key">
+                                    </span>
                                 </div>
                             </div>
 
@@ -295,7 +303,7 @@
             </div>
 
         </div>
-        
+
         <!-- ACTION -->
         <div class="mt-5">
             <x-primary-button class="px-4 py-2 text-sm">

@@ -63,7 +63,8 @@ Route::middleware('auth')->group(function () {
 
     // WORSHIP TEAM ----------------------------------------------------------------------------------------------
     Route::get('/worship-team', [WorshipTeamController::class, 'index'])->name('worship-team');
-    Route::get('/worship-team-view', [WorshipTeamController::class, 'index'])->name('worship-team-view');
+    Route::get('/worship-team/{id}', [WorshipTeamController::class, 'view'])->name('worship.team.view');
+
 
 
 

@@ -39,8 +39,8 @@
 
                 <!-- DESCRIPTION -->
                 @if ($user->describe)
-                    <div class="text-sm text-gray-500 mt-5 max-w-md">
-                        {{ $user->describe }}
+                    <div class="text-sm text-gray-500 mt-5 max-w-md leading-tight">
+                        {!! nl2br(e($user->describe)) !!}
                     </div>
                 @endif
 
@@ -49,6 +49,16 @@
             <!-- ===================== -->
             <!-- 🎵 SONGS -->
             <!-- ===================== -->
+            @php
+                $songs = $user->songs->sortBy('song_title')->values(); // reset index
+                $perPage = 12;
+                $page = request()->get('page', 1);
+
+                $total = $songs->count();
+                $chunks = $songs->chunk($perPage);
+                $currentSongs = $chunks->get($page - 1) ?? collect();
+            @endphp
+
             <div class="mb-6">
 
                 <!-- HEADER -->
@@ -65,23 +75,20 @@
                 <!-- SONG GRID -->
                 <div class="grid grid-cols-2 gap-2">
 
-                    @forelse($user->songs->sortBy('song_title') as $song)
+                    @forelse($currentSongs as $song)
                         <div
                             class="border border-gray-200 rounded-xl p-2.5 bg-white 
-                        hover:shadow-md hover:-translate-y-[1px] transition-all duration-200">
+                hover:shadow-md hover:-translate-y-[1px] transition-all duration-200">
 
-                            <!-- TITLE -->
                             <div class="text-xs font-semibold text-gray-800 truncate leading-tight">
                                 {{ $song->song_title }}
                             </div>
 
-                            <!-- ARTIST -->
                             <div class="text-xs text-gray-500">
                                 {{ $song->song_by }}
                             </div>
 
-                            <!-- KEY -->
-                            <div class="text-xs text-gray-600  flex items-center gap-1">
+                            <div class="text-xs text-gray-600 flex items-center gap-1">
                                 <span class="text-gray-400">My Key:</span>
                                 <span class="px-2 py-0.2 rounded-full font-semibold bg-blue-100 text-blue-700">
                                     {{ $song->user_key }}
@@ -97,6 +104,37 @@
 
                 </div>
 
+                <!-- PAGINATION -->
+                @if ($chunks->count() > 1)
+                    <div class="flex items-center justify-between mt-4 text-xs">
+
+                        <!-- LEFT: PAGE INFO -->
+                        <div class="text-gray-500">
+                            Page {{ $page }} of {{ $chunks->count() }}
+                        </div>
+
+                        <!-- RIGHT: NAV BUTTONS -->
+                        <div class="flex items-center gap-2">
+
+                            @if ($page > 1)
+                                <a href="?page={{ $page - 1 }}"
+                                    class="px-3 py-1 border rounded hover:bg-gray-100 transition">
+                                    ← Prev
+                                </a>
+                            @endif
+
+                            @if ($page < $chunks->count())
+                                <a href="?page={{ $page + 1 }}"
+                                    class="px-3 py-1 border rounded hover:bg-gray-100 transition">
+                                    Next →
+                                </a>
+                            @endif
+
+                        </div>
+
+                    </div>
+                @endif
+
             </div>
 
             <!-- ===================== -->
@@ -108,7 +146,19 @@
                     $socials = $user->socialLinks->keyBy('platform');
                 @endphp
 
-                <div class="flex justify-center gap-2 text-sm text-gray-500">
+                <!-- HEADER -->
+                <div class="flex items-center my-4">
+                    <div class="flex-1 h-px bg-gray-300"></div>
+
+                    <div class="px-3 text-sm font-semibold text-gray-700 tracking-wide">
+                       Connect With My Socials
+                    </div>
+
+                    <div class="flex-1 h-px bg-gray-300"></div>
+                </div>
+
+
+                <div class="flex justify-center gap-2 text-md text-gray-500">
 
                     @foreach ($user->socialLinks as $social)
                         @php
