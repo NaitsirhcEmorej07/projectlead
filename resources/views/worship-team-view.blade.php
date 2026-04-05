@@ -151,7 +151,7 @@
                     <div class="flex-1 h-px bg-gray-300"></div>
 
                     <div class="px-3 text-sm font-semibold text-gray-700 tracking-wide">
-                       Connect With My Socials
+                        Connect With My Socials
                     </div>
 
                     <div class="flex-1 h-px bg-gray-300"></div>
@@ -184,17 +184,17 @@
                         @endif
                     @endforeach
 
-                    <!-- VIBER FROM USER -->
                     @if ($user->contact_number)
                         @php
                             $number = preg_replace('/[^0-9]/', '', $user->contact_number);
+
                             if (str_starts_with($number, '0')) {
                                 $number = '63' . substr($number, 1);
                             }
                         @endphp
 
-                        <a href="viber://chat?number={{ $number }}">
-                            <i class="pi pi-comment hover:text-gray-800 hover:scale-110 transition"></i>
+                        <a href="viber://chat?number=%2B{{ $number }}" target="_blank">
+                            <i class="pi pi-comment hover:text-gray-800 hover:scale-110 transition cursor-pointer"></i>
                         </a>
                     @endif
 
