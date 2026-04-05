@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\SongSelect;
 use App\Models\SongUser;
+use App\Models\SocialUser;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,14 +44,15 @@ class ProfileController extends Controller
             ->get();
 
         $userSongs = SongUser::where('user_id', $user->id)->get();
-
+        $socials = SocialUser::where('user_id', $user->id)->get();
 
         return view('profile.edit', [
             'user' => $user,
             'roles' => $roles,
             'userRoleIds' => $userRoleIds,
             'songs' => $songs,
-            'userSongs' => $userSongs, // 👈 ADD THIS
+            'userSongs' => $userSongs,
+            'socials' => $socials,
         ]);
     }
 
@@ -135,6 +137,32 @@ class ProfileController extends Controller
                 $church->save();
             }
         }
+
+        // =========================
+        // 🌐 SAVE SOCIAL LINKS
+        // =========================
+
+        // Clear old socials (manual control, no cascade)
+        SocialUser::where('user_id', $user->id)->delete();
+
+        // Prepare socials (only save if may laman)
+        $socials = [
+            'facebook' => $request->facebook,
+            'instagram' => $request->instagram,
+            'tiktok' => $request->tiktok,
+            'youtube' => $request->youtube,
+        ];
+
+        foreach ($socials as $platform => $link) {
+            if (!empty($link)) {
+                SocialUser::create([
+                    'user_id' => $user->id,
+                    'social_platform' => $platform,
+                    'social_link' => $link,
+                ]);
+            }
+        }
+
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

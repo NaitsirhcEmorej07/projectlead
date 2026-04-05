@@ -86,5 +86,14 @@ class User extends Authenticatable
         );
     }
 
-    
+
+    public function socialLinks()
+    {
+        return $this->hasMany(SocialUser::class);
+    }
+
+    public function songs()
+    {
+        return $this->hasMany(\App\Models\SongUser::class);
+    }
 }

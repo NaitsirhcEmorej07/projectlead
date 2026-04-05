@@ -13,7 +13,7 @@
                 <input type="text" name="search" x-model="query" @input="filterUsers" @keydown.enter="$el.form.submit()"
                     value="{{ $search ?? '' }}" placeholder="Search by name..."
                     class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200">
-                    
+
 
                 <!-- SUGGESTIONS -->
                 <div x-show="filtered.length > 0" @click.outside="filtered = []"
@@ -30,7 +30,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
                 @forelse($users as $user)
-                    <div class="border rounded-xl p-3 flex gap-3 items-start bg-white shadow-sm">
+                    <a href="{{ route('worship.team.view', $user->id) }}"
+                        class="border rounded-xl p-3 flex gap-3 items-start bg-white shadow-sm hover:shadow-md transition block">
 
                         <!-- PROFILE IMAGE -->
                         <div x-data="{
@@ -82,8 +83,8 @@
                             </div>
 
                         </div>
+                    </a>
 
-                    </div>
                 @empty
                     <p class="text-gray-500 text-sm">No users found.</p>
                 @endforelse

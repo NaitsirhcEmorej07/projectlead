@@ -36,4 +36,15 @@ class WorshipTeamController extends Controller
 
         return view('worship-team', compact('users', 'search'));
     }
+
+    public function view($id)
+    {
+        $user = User::with([
+            'roles',
+            'songs',
+            'socialLinks'
+        ])->findOrFail($id);
+
+        return view('worship-team-view', compact('user'));
+    }
 }

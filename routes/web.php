@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+
+Route::get('/worship-team/{id}', [WorshipTeamController::class, 'view'])
+    ->name('worship.team.view');
+
+
 /*
 |--------------------------------------------------------------------------
 | GUEST ROUTES
@@ -58,6 +63,8 @@ Route::middleware('auth')->group(function () {
 
     // WORSHIP TEAM ----------------------------------------------------------------------------------------------
     Route::get('/worship-team', [WorshipTeamController::class, 'index'])->name('worship-team');
+    Route::get('/worship-team-view', [WorshipTeamController::class, 'index'])->name('worship-team-view');
+
 
 
     // PROFILE ----------------------------------------------------------------------------------------------

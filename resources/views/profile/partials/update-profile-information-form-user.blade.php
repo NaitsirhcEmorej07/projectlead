@@ -119,7 +119,7 @@
             <!-- DESCRIPTION -->
             <div class="mb-3">
                 <x-input-label value="Share your Story" />
-                <textarea name="describe" class="block w-full border-gray-300 rounded-md text-sm mt-1" rows="5">{{ old('describe', $user->describe) }}</textarea>
+                <textarea name="describe" class="block w-full border-gray-300 rounded-md text-sm mt-1" rows="8">{{ old('describe', $user->describe) }}</textarea>
             </div>
 
         </div>
@@ -131,7 +131,16 @@
 
             <!-- ADD BUTTON -->
             <div class="flex justify-end mb-2">
-                <button type="button" @click="showAdd = !showAdd; editIndex = null"
+                <button type="button"
+                    @click="
+                                if (editIndex !== null) {
+                                    resetForm();
+                                    editIndex = null;
+                                    showAdd = false;
+                                } else {
+                                    showAdd = !showAdd;
+                                }
+                            "
                     class="flex items-center gap-1 px-3 py-1.5 rounded-lg border hover:bg-gray-100 transition text-sm text-gray-700">
 
                     <i class="pi text-xs" :class="showAdd ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
@@ -253,34 +262,40 @@
         <!-- 🌐 SOCIAL TAB -->
         <!-- ===================== -->
         <div x-show="tab === 'social'" class="mt-5">
-
+            @php
+                $socialMap = $socials->pluck('social_link', 'social_platform');
+            @endphp
 
             <!-- FACEBOOK -->
             <div class="flex items-center border border-gray-300 rounded-md mb-2 px-2">
                 <i class="pi pi-facebook text-blue-600 text-sm mr-2"></i>
-                <input type="text" placeholder="Facebook" class="w-full text-sm border-0 focus:ring-0">
+                <input type="text" name="facebook" value="{{ old('facebook', $socialMap['facebook'] ?? '') }}"
+                    placeholder="Facebook" class="w-full text-sm border-0 focus:ring-0">
             </div>
 
             <!-- INSTAGRAM -->
             <div class="flex items-center border border-gray-300 rounded-md mb-2 px-2">
                 <i class="pi pi-instagram text-pink-500 text-sm mr-2"></i>
-                <input type="text" placeholder="Instagram" class="w-full text-sm border-0 focus:ring-0">
+                <input type="text" name="instagram" value="{{ old('instagram', $socialMap['instagram'] ?? '') }}"
+                    placeholder="Instagram" class="w-full text-sm border-0 focus:ring-0">
             </div>
 
             <!-- TIKTOK -->
             <div class="flex items-center border border-gray-300 rounded-md mb-2 px-2">
                 <i class="pi pi-tiktok text-black text-sm mr-2"></i>
-                <input type="text" placeholder="Tiktok" class="w-full text-sm border-0 focus:ring-0">
+                <input type="text" name="tiktok" value="{{ old('tiktok', $socialMap['tiktok'] ?? '') }}"
+                    placeholder="Tiktok" class="w-full text-sm border-0 focus:ring-0">
             </div>
 
             <!-- YOUTUBE -->
             <div class="flex items-center border border-gray-300 rounded-md mb-2 px-2">
                 <i class="pi pi-youtube text-red-600 text-sm mr-2"></i>
-                <input type="text" placeholder="YouTube" class="w-full text-sm border-0 focus:ring-0">
+                <input type="text" name="youtube" value="{{ old('youtube', $socialMap['youtube'] ?? '') }}"
+                    placeholder="YouTube" class="w-full text-sm border-0 focus:ring-0">
             </div>
 
         </div>
-
+        
         <!-- ACTION -->
         <div class="mt-5">
             <x-primary-button class="px-4 py-2 text-sm">
