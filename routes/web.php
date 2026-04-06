@@ -64,6 +64,8 @@ Route::middleware('auth')->group(function () {
     // WORSHIP TEAM ----------------------------------------------------------------------------------------------
     Route::get('/worship-team', [WorshipTeamController::class, 'index'])->name('worship-team');
     Route::get('/worship-team/{id}', [WorshipTeamController::class, 'view'])->name('worship.team.view');
+    Route::post('/worship-team/toggle-public', [WorshipTeamController::class, 'togglePublicView']);
+    Route::post('/worship-team/toggle-private', [WorshipTeamController::class, 'togglePublicUnview']);
 
 
 
@@ -78,5 +80,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile-song/delete/{id}', [ProfileController::class, 'deleteSong'])->name('profile-song.delete');
 });
 
+Route::get('/worship-team/public/{link}', [WorshipTeamController::class, 'publicView'])->name('worship.team.public');
 
 require __DIR__ . '/auth.php';

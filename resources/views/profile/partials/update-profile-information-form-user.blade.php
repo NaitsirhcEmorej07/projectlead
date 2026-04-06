@@ -116,7 +116,7 @@
                     :value="old('contact_number', $user->contact_number)" />
             </div>
 
-            <!-- DESCRIPTION -->eb
+            <!-- DESCRIPTION -->
 
             <div class="mb-3">
                 <x-input-label value="Share your Story" />
@@ -207,7 +207,7 @@
 
             <!-- SONG CARDS (DYNAMIC) -->
             <div class="grid grid-cols-1 gap-2">
-            {{-- <div class="grid grid-cols-2 sm:grid-cols-2 gap-2"> --}}
+                {{-- <div class="grid grid-cols-2 sm:grid-cols-2 gap-2"> --}}
                 <template
                     x-for="(song, index) in [...userSongs].sort((a, b) => 
                                 a.song_title.toLowerCase().localeCompare(b.song_title.toLowerCase())
@@ -305,10 +305,115 @@
         </div>
 
         <!-- ACTION -->
-        <div class="mt-5">
-            <x-primary-button class="px-4 py-2 text-sm">
-                Save
-            </x-primary-button>
+        <div x-data="{
+            isPublic: {{ $user->is_public ? 'true' : 'false' }},
+            showModal: false,
+            modalType: '',
+            publicLink: '',
+        
+            toggleNow() {
+                fetch(this.isPublic ? '/worship-team/toggle-public' : '/worship-team/toggle-private', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        this.showModal = true;
+        
+                        if (data.status === 'enabled') {
+                            this.modalType = 'enabled';
+                            this.publicLink = data.link;
+        
+                            navigator.clipboard.writeText(data.link);
+                        } else {
+                            this.modalType = 'disabled';
+                        }
+                    });
+            }
+        }" class="mt-5">
+
+            <div class="flex items-center justify-between">
+
+                <!-- LEFT -->
+                <div class="flex items-center gap-2">
+
+                    <span class="text-sm text-gray-600">Make Profile Public</span>
+
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" x-model="isPublic" @change="toggleNow()">
+
+                        <div class="w-9 h-5 bg-gray-200 rounded-full peer-checked:bg-indigo-500 transition"></div>
+
+                        <div
+                            class="absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full 
+                    transition peer-checked:translate-x-4">
+                        </div>
+                    </label>
+
+                </div>
+
+                <!-- SAVE BUTTON (AS IS) -->
+                <x-primary-button class="px-4 py-2 text-sm">
+                    Save
+                </x-primary-button>
+
+            </div>
+
+            <!-- MODAL -->
+            <div x-show="showModal" x-transition
+                class="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+
+                <div class="bg-white rounded-xl p-5 w-[90%] max-w-sm text-center">
+
+                    <!-- ENABLED -->
+                    <template x-if="modalType === 'enabled'">
+                        <div>
+                            <div class="text-md font-semibold mb-2">
+                                Profile is Public 🎉
+                            </div>
+
+                            <!-- PREMIUM INPUT -->
+                            <div class="relative mb-3">
+                                <input type="text" x-model="publicLink" readonly
+                                    class="w-full border rounded px-3 py-2 text-sm pr-10">
+
+                                <!-- COPY ICON (FIXED) -->
+                                <button type="button" @click="navigator.clipboard.writeText(publicLink)"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-500 transition">
+
+                                    <i class="pi pi-copy text-sm"></i>
+                                </button>
+                            </div>
+
+                            <a :href="publicLink" target="_blank"
+                                class="block mt-2 text-xs text-indigo-500 hover:underline">
+                                Open Public Page →
+                            </a>
+                        </div>
+                    </template>
+
+                    <!-- DISABLED -->
+                    <template x-if="modalType === 'disabled'">
+                        <div>
+                            <div class="text-md font-semibold mb-2">
+                                Profile is now Private 🔒
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- CLOSE -->
+                    <button type="button" @click="showModal = false"
+                        class="mt-4 text-xs text-gray-400 hover:text-gray-600">
+                        Close
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
 
     </form>

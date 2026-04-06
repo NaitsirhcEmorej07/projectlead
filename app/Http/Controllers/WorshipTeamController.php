@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Models\User;
 
 class WorshipTeamController extends Controller
@@ -46,5 +47,45 @@ class WorshipTeamController extends Controller
         ])->findOrFail($id);
 
         return view('worship-team-view', compact('user'));
+    }
+
+    public function togglePublicView()
+    {
+        $user = Auth::user();
+
+        // generate secure random link if wala pa
+        if (!$user->public_link) {
+            $user->public_link = Str::random(40); // 🔥 long secure token
+        }
+
+        $user->is_public = 1;
+        $user->save();
+
+        return response()->json([
+            'status' => 'enabled',
+            'link' => route('worship.team.public', ['link' => $user->public_link])
+        ]);
+    }
+
+    public function togglePublicUnview()
+    {
+        $user = Auth::user();
+
+        $user->is_public = 0;
+        $user->save();
+
+        return response()->json([
+            'status' => 'disabled'
+        ]);
+    }
+
+    public function publicView($link)
+    {
+        $user = User::with(['roles', 'songs', 'socialLinks'])
+            ->where('public_link', $link)
+            ->where('is_public', 1)
+            ->firstOrFail();
+
+        return view('worship-team-view-public', compact('user'));
     }
 }
