@@ -94,136 +94,150 @@
                 <div class="grid grid-cols-2 gap-2">
 
                     @forelse($currentSongs as $song)
-                        <div
-                            class="border border-gray-200 rounded-xl p-2.5 bg-white 
-                        hover:shadow-md hover:-translate-y-[1px] transition-all duration-200">
+                        @if ($song->song_reference)
+                            <a href="{{ $song->song_reference }}" target="_blank"
+                                class="block border border-gray-200 rounded-xl p-2.5 bg-white 
+                hover:shadow-md hover:-translate-y-[1px] transition-all duration-200
+                hover:scale-[1.02] active:scale-[0.97] cursor-pointer">
+                            @else
+                                <div
+                                    class="border border-gray-200 rounded-xl p-2.5 bg-white 
+                hover:shadow-md hover:-translate-y-[1px] transition-all duration-200
+                hover:scale-[1.02] cursor-pointer">
+                        @endif
 
-                            <div class="text-xs font-semibold text-gray-800 truncate leading-tight">
-                                {{ $song->song_title }}
-                            </div>
-
-                            <div class="text-xs text-gray-500">
-                                {{ $song->song_by }}
-                            </div>
-
-                            <div class="text-xs text-gray-600 flex items-center gap-1">
-                                <span class="text-gray-400">My Key:</span>
-                                <span class="px-2 py-0.2 rounded-full font-semibold bg-blue-100 text-blue-700">
-                                    {{ $song->user_key }}
-                                </span>
-                            </div>
-
+                        <div class="text-xs font-semibold text-gray-800 truncate leading-tight">
+                            {{ $song->song_title }}
                         </div>
-                    @empty
-                        <div class="col-span-2 text-center text-xs text-gray-400 py-4">
-                            No songs yet 🎵
-                        </div>
-                    @endforelse
 
+                        <div class="text-xs text-gray-500">
+                            {{ $song->song_by }}
+                        </div>
+
+                        <div class="text-xs text-gray-600 flex items-center gap-1">
+                            <span class="text-gray-400">My Key:</span>
+                            <span class="px-2 py-0.2 rounded-full font-semibold bg-blue-100 text-blue-700">
+                                {{ $song->user_key }}
+                            </span>
+                        </div>
+
+                        @if ($song->song_reference)
+                            </a>
+                        @else
                 </div>
+                @endif
 
-                <!-- PAGINATION -->
-                @if ($chunks->count() > 1)
-                    <div class="flex items-center justify-between mt-4 text-xs">
+            @empty
+                <div class="col-span-2 text-center text-xs text-gray-400 py-4">
+                    No songs yet 🎵
+                </div>
+                @endforelse
 
-                        <div class="text-gray-500">
-                            Page {{ $page }} of {{ $chunks->count() }}
-                        </div>
+            </div>
 
-                        <div class="flex items-center gap-2">
+            <!-- PAGINATION -->
+            @if ($chunks->count() > 1)
+                <div class="flex items-center justify-between mt-4 text-xs">
 
-                            @if ($page > 1)
-                                <a href="?page={{ $page - 1 }}"
-                                    class="px-3 py-1 border rounded hover:bg-gray-100 transition">
-                                    ← Prev
-                                </a>
-                            @endif
+                    <div class="text-gray-500">
+                        Page {{ $page }} of {{ $chunks->count() }}
+                    </div>
 
-                            @if ($page < $chunks->count())
-                                <a href="?page={{ $page + 1 }}"
-                                    class="px-3 py-1 border rounded hover:bg-gray-100 transition">
-                                    Next →
-                                </a>
-                            @endif
+                    <div class="flex items-center gap-2">
 
-                        </div>
+                        @if ($page > 1)
+                            <a href="?page={{ $page - 1 }}"
+                                class="px-3 py-1 border rounded hover:bg-gray-100 transition">
+                                ← Prev
+                            </a>
+                        @endif
+
+                        @if ($page < $chunks->count())
+                            <a href="?page={{ $page + 1 }}"
+                                class="px-3 py-1 border rounded hover:bg-gray-100 transition">
+                                Next →
+                            </a>
+                        @endif
 
                     </div>
+
+                </div>
+            @endif
+
+        </div>
+
+        <!-- ===================== -->
+        <!-- 🌐 SOCIALS -->
+        <!-- ===================== -->
+        <div class="text-center">
+
+            @php
+                $socials = $user->socialLinks->keyBy('platform');
+            @endphp
+
+            <!-- HEADER -->
+            <div class="flex items-center my-4">
+                <div class="flex-1 h-px bg-gray-300"></div>
+
+                <div class="px-3 text-sm font-semibold text-gray-700 tracking-wide">
+                    Connect With My Socials
+                </div>
+
+                <div class="flex-1 h-px bg-gray-300"></div>
+            </div>
+
+            <div class="flex justify-center gap-2 text-md text-gray-500">
+
+                @foreach ($user->socialLinks as $social)
+                    @php
+                        $platform = strtolower($social->social_platform);
+                    @endphp
+
+                    @if ($platform === 'facebook')
+                        <a href="{{ $social->social_link }}" target="_blank">
+                            <i class="pi pi-facebook hover:text-gray-800 hover:scale-110 transition"></i>
+                        </a>
+                    @elseif($platform === 'instagram')
+                        <a href="{{ $social->social_link }}" target="_blank">
+                            <i class="pi pi-instagram hover:text-gray-800 hover:scale-110 transition"></i>
+                        </a>
+                    @elseif($platform === 'tiktok')
+                        <a href="{{ $social->social_link }}" target="_blank">
+                            <i class="pi pi-tiktok hover:text-gray-800 hover:scale-110 transition"></i>
+                        </a>
+                    @elseif($platform === 'youtube')
+                        <a href="{{ $social->social_link }}" target="_blank">
+                            <i class="pi pi-youtube hover:text-gray-800 hover:scale-110 transition"></i>
+                        </a>
+                    @endif
+                @endforeach
+
+                @if ($user->contact_number)
+                    @php
+                        $number = preg_replace('/[^0-9]/', '', $user->contact_number);
+
+                        if (str_starts_with($number, '0')) {
+                            $number = '63' . substr($number, 1);
+                        }
+                    @endphp
+
+                    <a href="viber://chat?number=%2B{{ $number }}" target="_blank">
+                        <i class="pi pi-comment hover:text-gray-800 hover:scale-110 transition cursor-pointer"></i>
+                    </a>
                 @endif
 
             </div>
 
-            <!-- ===================== -->
-            <!-- 🌐 SOCIALS -->
-            <!-- ===================== -->
-            <div class="text-center">
-
-                @php
-                    $socials = $user->socialLinks->keyBy('platform');
-                @endphp
-
-                <!-- HEADER -->
-                <div class="flex items-center my-4">
-                    <div class="flex-1 h-px bg-gray-300"></div>
-
-                    <div class="px-3 text-sm font-semibold text-gray-700 tracking-wide">
-                        Connect With My Socials
-                    </div>
-
-                    <div class="flex-1 h-px bg-gray-300"></div>
-                </div>
-
-                <div class="flex justify-center gap-2 text-md text-gray-500">
-
-                    @foreach ($user->socialLinks as $social)
-                        @php
-                            $platform = strtolower($social->social_platform);
-                        @endphp
-
-                        @if ($platform === 'facebook')
-                            <a href="{{ $social->social_link }}" target="_blank">
-                                <i class="pi pi-facebook hover:text-gray-800 hover:scale-110 transition"></i>
-                            </a>
-                        @elseif($platform === 'instagram')
-                            <a href="{{ $social->social_link }}" target="_blank">
-                                <i class="pi pi-instagram hover:text-gray-800 hover:scale-110 transition"></i>
-                            </a>
-                        @elseif($platform === 'tiktok')
-                            <a href="{{ $social->social_link }}" target="_blank">
-                                <i class="pi pi-tiktok hover:text-gray-800 hover:scale-110 transition"></i>
-                            </a>
-                        @elseif($platform === 'youtube')
-                            <a href="{{ $social->social_link }}" target="_blank">
-                                <i class="pi pi-youtube hover:text-gray-800 hover:scale-110 transition"></i>
-                            </a>
-                        @endif
-                    @endforeach
-
-                    @if ($user->contact_number)
-                        @php
-                            $number = preg_replace('/[^0-9]/', '', $user->contact_number);
-
-                            if (str_starts_with($number, '0')) {
-                                $number = '63' . substr($number, 1);
-                            }
-                        @endphp
-
-                        <a href="viber://chat?number=%2B{{ $number }}" target="_blank">
-                            <i class="pi pi-comment hover:text-gray-800 hover:scale-110 transition cursor-pointer"></i>
-                        </a>
-                    @endif
-
-                </div>
-
-            </div>
-
         </div>
-        <div class="text-center mt-4 text-xs text-gray-400">
-            Powered by
-            <a href="https://project-lead.laravel.cloud/" target="_blank" class="font-semibold text-indigo-500 hover:underline">
-                Project LEAD
-            </a>
-        </div>
+
+    </div>
+    <div class="text-center mt-4 text-xs text-gray-400">
+        Powered by
+        <a href="https://project-lead.laravel.cloud/" target="_blank"
+            class="font-semibold text-indigo-500 hover:underline">
+            Project LEAD
+        </a>
+    </div>
     </div>
 
 </body>
