@@ -30,7 +30,7 @@
                 });
             @endphp
 
-            <div x-data="calendarData()" class="max-w-7xl mx-auto">
+            <div x-data="calendarData()" @edit-schedule.window="editSchedule($event.detail)" class="max-w-7xl mx-auto">
 
                 <div class="bg-white shadow-sm rounded-2xl p-5 sm:p-6">
 
@@ -188,7 +188,7 @@
                         </div>
 
                         <!-- 🔥 ADD SCHEDULE -->
-                        <div x-data="{ openForm: false }"
+                        <div x-data="{ openForm: false }" @edit-schedule.window="openForm = true"
                             class="border border-gray-200 rounded-2xl mb-5 overflow-hidden bg-white">
 
                             <!-- TOGGLE -->
@@ -207,8 +207,17 @@
                             <!-- FORM -->
                             <div x-show="openForm" x-transition class="border-t border-gray-100 p-3">
 
-                                <form action="{{ route('worship-schedule.store') }}" method="POST" class="space-y-2">
+                                <form
+                                    :action="formMode === 'add'
+                                        ?
+                                        '{{ route('worship-schedule.store') }}' :
+                                        `/worship-schedule/${formData.id}`"
+                                    method="POST" class="space-y-2">
                                     @csrf
+
+                                    <template x-if="formMode === 'edit'">
+                                        <input type="hidden" name="_method" value="PUT">
+                                    </template>
 
                                     <!-- DATE -->
                                     <input type="hidden" name="sched_date" :value="selectedDate">
@@ -216,29 +225,28 @@
                                     <!-- TITLE -->
                                     <div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">Title</label>
-                                        <input type="text" name="sched_title"
-                                            class="w-full rounded-xl border-gray-300 text-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500"
-                                            placeholder="Enter title">
+                                        <input type="text" name="sched_title" x-model="formData.sched_title"
+                                            class="w-full rounded-xl border-gray-300 text-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 uppercase"
+                                            placeholder="Enter title" oninput="this.value = this.value.toUpperCase()">
                                     </div>
 
-                                    <!-- 🔥 TIME + TYPE -->
+                                    <!-- TIME + TYPE -->
                                     <div class="grid grid-cols-2 gap-3">
 
-                                        <!-- TIME -->
                                         <div>
                                             <label class="block text-xs font-medium text-gray-500 mb-1">Time</label>
-                                            <input type="time" name="sched_time" value="00:00"
+                                            <input type="time" name="sched_time" x-model="formData.sched_time"
                                                 class="w-full rounded-xl border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         </div>
 
-                                        <!-- TYPE -->
                                         <div>
                                             <label class="block text-xs font-medium text-gray-500 mb-1">Type</label>
-                                            <select name="sched_type"
+                                            <select name="sched_type" x-model="formData.sched_type"
                                                 class="w-full rounded-xl border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
 
-                                                <option value="" disabled selected>Select type</option>
-                                                <option value="Worship Ministry">Worship Ministry</option>
+                                                <option value="" disabled>Select type</option>
+                                                <option value="All Ministries">All Ministries</option>
+                                                <option value="Music Ministry">Music Ministry</option>
                                                 <option value="Dance Ministry">Dance Ministry</option>
                                                 <option value="Kithcen Ministry">Kithcen Ministry</option>
                                                 <option value="Children Ministry">Children Ministry</option>
@@ -251,7 +259,7 @@
                                     <!-- DESCRIPTION -->
                                     <div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">Description</label>
-                                        <textarea name="sched_description" rows="9"
+                                        <textarea name="sched_description" rows="9" x-model="formData.sched_description"
                                             class="w-full rounded-xl border-gray-300 text-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500"
                                             placeholder="Add details..."></textarea>
                                     </div>
@@ -259,8 +267,8 @@
                                     <!-- BUTTON -->
                                     <div class="pt-1">
                                         <button type="submit"
-                                            class="w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition">
-                                            Save Schedule
+                                            class="w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition"
+                                            x-text="formMode === 'add' ? 'Save Schedule' : 'Update Schedule'">
                                         </button>
                                     </div>
 
@@ -314,7 +322,7 @@
                                             <div class="mt-1 flex justify-center gap-1 border-t pt-1">
 
                                                 <!-- EDIT -->
-                                                <button @click="editMode = true"
+                                                <button @click="$dispatch('edit-schedule', sched)"
                                                     class="p-1 text-gray-400 hover:text-indigo-600 transition">
                                                     <i class="pi pi-pencil text-sm"></i>
                                                 </button>
@@ -335,7 +343,7 @@
 
                                         </div>
 
-                                        <!-- 🔥 EDIT MODE -->
+                                        {{-- <!-- 🔥 EDIT MODE -->
                                         <div x-show="editMode" x-transition class="mt-2">
 
                                             <form :action="`/worship-schedule/${sched.id}`" method="POST"
@@ -377,7 +385,7 @@
 
                                             </form>
 
-                                        </div>
+                                        </div> --}}
 
                                     </div>
                                 </template>
@@ -397,7 +405,6 @@
 
             </div>
 
-            <!-- ALPINE -->
             <script>
                 function calendarData() {
                     return {
@@ -407,11 +414,48 @@
                         schedules: @json($schedulesJson),
                         selectedDate: '',
 
+                        // 🔥 NEW
+                        formMode: 'add',
+                        formData: {
+                            id: null,
+                            sched_title: '',
+                            sched_time: '09:00',
+                            sched_type: '',
+                            sched_description: ''
+                        },
+
                         openModal(date, label) {
                             this.selectedDate = date;
                             this.selectedDateLabel = label;
                             this.selectedSchedules = this.schedules[date] ?? [];
                             this.open = true;
+
+                            this.resetForm();
+                        },
+
+                        // 🔥 RESET FORM
+                        resetForm() {
+                            this.formMode = 'add';
+                            this.formData = {
+                                id: null,
+                                sched_title: '',
+                                sched_time: '09:00',
+                                sched_type: '',
+                                sched_description: ''
+                            };
+                        },
+
+                        // 🔥 EDIT (REUSE FORM)
+                        editSchedule(sched) {
+                            this.formMode = 'edit';
+
+                            this.formData = {
+                                id: sched.id,
+                                sched_title: sched.sched_title,
+                                sched_time: sched.sched_time,
+                                sched_type: sched.sched_type,
+                                sched_description: sched.sched_description
+                            };
                         }
                     }
                 }
