@@ -6,10 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Project LEAD</title>
+    {{-- TITLE --}}
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-     <!-- LOGO -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/leadv2_icon.png') }}">
+    <!-- LOGO / FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/lead_icon_192.png') }}">
+
+    <!-- PWA -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- iOS -->
+    <link rel="apple-touch-icon" href="{{ asset('images/lead_icon_192.png') }}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- PrimeIcons -->
     <link href="https://unpkg.com/primeicons/primeicons.css" rel="stylesheet">
@@ -31,7 +43,14 @@
 
     {{ $slot }}
 
-
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(() => console.log('SW registered'))
+                .catch(err => console.log('SW error:', err));
+        }
+    </script>
 
 </body>
 

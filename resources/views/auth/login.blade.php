@@ -7,7 +7,7 @@
 
             <!-- Logo -->
             <div class="text-center mb-2">
-                <img src="{{ asset('images/lead_icon.png') }}" alt="Project LEAD Logo"
+                <img id="leadLogo" src="{{ asset('images/lead_icon.png') }}" alt="Project LEAD Logo"
                     class="w-20 h-20 mx-auto object-contain">
             </div>
 
@@ -90,5 +90,151 @@
 
         </div>
     </div>
+
+    <!-- INSTALL MODAL -->
+    <div id="installModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-sm text-center">
+
+            <img src="{{ asset('images/lead_icon_192.png') }}" class="w-16 h-16 mx-auto mb-3">
+
+            <h2 class="text-lg font-semibold">Install LEAD</h2>
+            <p class="text-sm text-gray-500 mb-4">
+                Get faster access and app-like experience.
+            </p>
+
+            <div class="flex gap-2">
+                <button id="installNow" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg">
+                    Install
+                </button>
+
+                <button id="closeInstall" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg">
+                    Not now
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    {{-- OLD SCRIPT POP UP --}}
+    {{-- <script>
+        let deferredPrompt;
+
+        // CHECK IF ALREADY DISMISSED
+        if (!localStorage.getItem('installDismissed')) {
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+
+                // show modal
+                document.getElementById('installModal').classList.remove('hidden');
+            });
+        }
+
+        // INSTALL CLICK
+        document.getElementById('installNow').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+
+                const {
+                    outcome
+                } = await deferredPrompt.userChoice;
+
+                if (outcome === 'accepted') {
+                    console.log('User installed');
+                }
+
+                deferredPrompt = null;
+                document.getElementById('installModal').classList.add('hidden');
+            }
+        });
+
+        // CLOSE CLICK
+        document.getElementById('closeInstall').addEventListener('click', () => {
+            document.getElementById('installModal').classList.add('hidden');
+
+            // save dismissed state
+            localStorage.setItem('installDismissed', true);
+        });
+
+
+
+        let logoClickCount = parseInt(localStorage.getItem('logoClickCount')) || 0;
+
+        document.getElementById('leadLogo').addEventListener('click', () => {
+            logoClickCount++;
+
+            localStorage.setItem('logoClickCount', logoClickCount);
+
+            console.log('Logo clicks:', logoClickCount);
+
+            if (logoClickCount >= 3) {
+                // RESET install dismissed
+                localStorage.removeItem('installDismissed');
+
+                // SHOW MODAL AGAIN
+                document.getElementById('installModal').classList.remove('hidden');
+
+                // RESET counter
+                localStorage.setItem('logoClickCount', 0);
+            }
+        });
+    </script> --}}
+
+    <script>
+        let deferredPrompt;
+
+        // CAPTURE install event (no auto show)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        // INSTALL CLICK
+        document.getElementById('installNow').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+
+                const {
+                    outcome
+                } = await deferredPrompt.userChoice;
+
+                if (outcome === 'accepted') {
+                    console.log('User installed');
+                }
+
+                deferredPrompt = null;
+                document.getElementById('installModal').classList.add('hidden');
+            } else {
+                alert('Install not available yet 😅');
+            }
+        });
+
+        // CLOSE CLICK
+        document.getElementById('closeInstall').addEventListener('click', () => {
+            document.getElementById('installModal').classList.add('hidden');
+        });
+
+        // LOGO CLICK (3x trigger)
+        let logoClickCount = 0;
+
+        document.getElementById('leadLogo').addEventListener('click', () => {
+            logoClickCount++;
+
+            console.log('Logo clicks:', logoClickCount);
+
+            if (logoClickCount >= 3) {
+                if (deferredPrompt) {
+                    document.getElementById('installModal').classList.remove('hidden');
+                } else {
+                    alert('Install not available yet 😅');
+                }
+
+                logoClickCount = 0;
+            }
+        });
+    </script>
+
+
 
 </x-guest-layout>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Project LEAD</title>
+
+    <!-- Tailwind CDN (lightweight for offline page) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white rounded-2xl shadow-lg p-6 w-[90%] max-w-sm text-center">
+
+        <!-- Icon -->
+        <img src="/images/lead_icon_192.png" class="w-16 h-16 mx-auto mb-4">
+
+        <!-- Title -->
+        <h1 class="text-xl font-semibold text-gray-800">
+            You're Offline 😢
+        </h1>
+
+        <!-- Message -->
+        <p class="text-gray-500 text-sm mt-2 mb-5">
+            No internet connection. Please check your network and try again.
+        </p>
+
+        <!-- Retry Button -->
+        <button onclick="window.location.reload()"
+            class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
+            Retry Connection
+        </button>
+
+    </div>
+
+</body>
+</html>
