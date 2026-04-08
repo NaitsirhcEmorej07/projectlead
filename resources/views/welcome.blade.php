@@ -35,7 +35,7 @@
                 <h1 class="text-xl font-semibold text-gray-900 tracking-wide">
                     PROJECT LEAD
                 </h1>
-                <h3 class="text-sm text-gray-500 mt-0 leading-tight" style="font-family: 'Dancing Script', cursive;">
+                <h3 class="text-sm text-gray-500 mt-0 leading-tight">
                     Worship team management, made simple.
                 </h3>
             </div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\WorshipTeamController;
 use App\Http\Controllers\SongController;
 
@@ -11,9 +12,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-
-Route::get('/worship-team/{id}', [WorshipTeamController::class, 'view'])
-    ->name('worship.team.view');
 
 
 /*
@@ -48,7 +46,6 @@ Route::middleware('auth')->group(function () {
     // MAIN APP ---------------------------------------------------------------------------------------------
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
 
-    Route::get('/worship-schedule', fn() => view('worship-schedule'))->name('worship-schedule');
 
     // APPROVAL ----------------------------------------------------------------------------------------------
     Route::get('/approval', [ApprovalController::class, 'index'])->middleware(['church.admin'])->name('approval');
@@ -67,8 +64,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/worship-team/toggle-public', [WorshipTeamController::class, 'togglePublicView']);
     Route::post('/worship-team/toggle-private', [WorshipTeamController::class, 'togglePublicUnview']);
 
-
-
+    // WORSHIP SCHEDULE ----------------------------------------------------------------------------------------------
+    Route::get('/worship-schedule', [ScheduleController::class, 'index'])->name('worship-schedule');
+    Route::post('/worship-schedule', [ScheduleController::class, 'store'])->name('worship-schedule.store');
+    Route::put('/worship-schedule/{id}', [ScheduleController::class, 'update'])->name('worship-schedule.update');
+    Route::delete('/worship-schedule/{id}', [ScheduleController::class, 'destroy'])->name('worship-schedule.destroy');
 
     // PROFILE ----------------------------------------------------------------------------------------------
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -83,3 +83,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/worship-team/public/{link}', [WorshipTeamController::class, 'publicView'])->name('worship.team.public');
 
 require __DIR__ . '/auth.php';
+
+
+Route::get('/calendar-preview', function () {
+    return view('worship-schedule');
+});

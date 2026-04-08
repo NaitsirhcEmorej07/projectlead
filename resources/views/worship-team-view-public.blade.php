@@ -213,15 +213,7 @@
                 @endforeach
 
                 @if ($user->contact_number)
-                    @php
-                        $number = preg_replace('/[^0-9]/', '', $user->contact_number);
-
-                        if (str_starts_with($number, '0')) {
-                            $number = '63' . substr($number, 1);
-                        }
-                    @endphp
-
-                    <a href="viber://chat?number=%2B{{ $number }}" target="_blank">
+                    <a href="https://wa.me/{{ $user->contact_number }}" target="_blank">
                         <i class="pi pi-comment hover:text-gray-800 hover:scale-110 transition cursor-pointer"></i>
                     </a>
                 @endif

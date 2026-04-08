@@ -33,6 +33,8 @@ class WorshipTeamController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
+            ->orderByRaw('LOWER(name)')
+            // ->orderBy('name', 'asc')
             ->get();
 
         return view('worship-team', compact('users', 'search'));
@@ -40,11 +42,23 @@ class WorshipTeamController extends Controller
 
     public function view($id)
     {
+        $currentChurchId = session('church_id');
+
+        if (!$currentChurchId) {
+            return redirect()->route('select-church');
+        }
+
         $user = User::with([
             'roles',
             'songs',
             'socialLinks'
-        ])->findOrFail($id);
+        ])
+            ->whereHas('churches', function ($query) use ($currentChurchId) {
+                $query->where('church_id', $currentChurchId)
+                    ->where('church_user.is_approved', true)
+                    ->where('church_user.type', 'member');
+            })
+            ->findOrFail($id);
 
         return view('worship-team-view', compact('user'));
     }
