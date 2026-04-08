@@ -43,15 +43,19 @@
 
     {{ $slot }}
 
-    
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
-                .then(() => console.log('SW registered'))
-                .catch(err => console.log('SW error:', err));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => {
+                        console.log('SW registered 🔥', reg);
+                    })
+                    .catch(err => {
+                        console.log('SW failed ❌', err);
+                    });
+            });
         }
     </script>
-
 </body>
 
 </html>

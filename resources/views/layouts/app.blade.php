@@ -54,13 +54,90 @@
         </main>
     </div>
 
+
     <script>
+        // SERVICE WORKER REGISTER
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
-                .then(() => console.log('SW registered'))
-                .catch(err => console.log('SW error:', err));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => {
+                        console.log('SW registered 🔥', reg);
+                    })
+                    .catch(err => {
+                        console.log('SW failed ❌', err);
+                    });
+            });
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // ❗ CHECK IF ALREADY INSTALLED (skip everything)
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('Already installed ✅');
+                return;
+            }
+
+            // CAPTURE install event (GLOBAL)
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+
+                // ❗ PREVENT REPEATED POPUP
+                if (localStorage.getItem('installShown')) return;
+
+                window.deferredPrompt = e;
+                console.log('INSTALL READY 🔥');
+
+                // mark as shown
+                localStorage.setItem('installShown', 'true');
+
+                // AUTO SHOW MODAL
+                const modal = document.getElementById('installModal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            });
+
+            // INSTALL CLICK
+            const installBtn = document.getElementById('installNow');
+            if (installBtn) {
+                installBtn.addEventListener('click', async () => {
+                    if (window.deferredPrompt) {
+                        window.deferredPrompt.prompt();
+
+                        const {
+                            outcome
+                        } = await window.deferredPrompt.userChoice;
+
+                        if (outcome === 'accepted') {
+                            console.log('User installed ✅');
+
+                            // OPTIONAL: track install
+                            localStorage.setItem('pwaInstalled', 'true');
+                        }
+
+                        window.deferredPrompt = null;
+
+                        const modal = document.getElementById('installModal');
+                        if (modal) modal.classList.add('hidden');
+                    } else {
+                        alert('Install not available yet 😅');
+                    }
+                });
+            }
+
+            // CLOSE CLICK
+            const closeBtn = document.getElementById('closeInstall');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    const modal = document.getElementById('installModal');
+                    if (modal) modal.classList.add('hidden');
+                });
+            }
+
+        });
     </script>
+
+
 
 </body>
 

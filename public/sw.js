@@ -1,23 +1,27 @@
 const CACHE_NAME = 'lead-cache-v1';
 
+const urlsToCache = [
+    '/',
+    '/manifest.json',
+    '/images/lead_icon_192.png',
+    '/images/lead_icon_512.png'
+];
+
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
+            .then(cache => {
+                console.log('Caching files...');
+                return cache.addAll(urlsToCache);
+            })
     );
 });
 
 self.addEventListener('fetch', event => {
     event.respondWith(
-        fetch(event.request)
+        caches.match(event.request)
             .then(response => {
-                return caches.open(CACHE_NAME).then(cache => {
-                    cache.put(event.request, response.clone());
-                    return response;
-                });
-            })
-            .catch(() => {
-                return caches.match(event.request)
-                    .then(response => response || caches.match('/offline.html'));
+                return response || fetch(event.request);
             })
     );
 });
