@@ -228,10 +228,11 @@
 
                                         <!-- TITLE -->
                                         <div>
-                                            <label class="block text-xs font-medium text-gray-500 mb-1">Title</label>
+                                            <label class="block text-xs font-medium text-gray-500 mb-1">Event
+                                                Title</label>
                                             <input type="text" name="sched_title" x-model="formData.sched_title"
                                                 class="w-full rounded-xl border-gray-300 text-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 uppercase"
-                                                placeholder="Enter title"
+                                                placeholder="Ex. Sunday Service etc."
                                                 oninput="this.value = this.value.toUpperCase()">
                                         </div>
 
@@ -245,16 +246,18 @@
                                             </div>
 
                                             <div>
-                                                <label class="block text-xs font-medium text-gray-500 mb-1">Type</label>
+                                                <label class="block text-xs font-medium text-gray-500 mb-1">Ministry
+                                                    Incharge</label>
                                                 <select name="sched_type" x-model="formData.sched_type"
                                                     class="w-full rounded-xl border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
 
-                                                    <option value="" disabled>Select type</option>
+                                                    <option value="" disabled>Select Ministry</option>
                                                     <option value="All Ministries">All Ministries</option>
                                                     <option value="Music Ministry">Music Ministry</option>
                                                     <option value="Dance Ministry">Dance Ministry</option>
                                                     <option value="Kithcen Ministry">Kithcen Ministry</option>
                                                     <option value="Children Ministry">Children Ministry</option>
+                                                    <option value="Others">Others</option>
 
                                                 </select>
                                             </div>

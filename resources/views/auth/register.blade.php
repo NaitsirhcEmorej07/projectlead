@@ -17,7 +17,7 @@
                     CHURCH ADMIN REGISTRATION
                 </h1>
                 <h3 class="text-sm text-gray-500 mt-0 leading-tight">
-                    Worship team management, made simple.
+                    Worship team management made simple.
                 </h3>
                 {{-- <h3 class="text-sm font-normal text-gray-500 mt-1 leading-tight">
                     Please provide your church details below
@@ -73,7 +73,7 @@
                 <!-- Actions -->
                 <div class="flex items-center justify-between mt-6">
                     <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">
-                         Back to login
+                        Back to login
                     </a>
 
                     <x-primary-button class="rounded-lg px-6">

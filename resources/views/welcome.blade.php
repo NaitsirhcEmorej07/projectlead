@@ -36,7 +36,7 @@
                     PROJECT LEAD
                 </h1>
                 <h3 class="text-sm text-gray-500 mt-0 leading-tight">
-                    Worship team management, made simple.
+                    Worship team management made simple.
                 </h3>
             </div>
 
