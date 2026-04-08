@@ -67,7 +67,7 @@
 
                 <!-- Button -->
                 <div class="mt-6">
-                    <x-primary-button class="w-full justify-center rounded-lg">
+                    <x-primary-button id="loginBtn" class="w-full justify-center rounded-lg">
                         Log in
                     </x-primary-button>
                 </div>
@@ -114,6 +114,31 @@
 
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            let isSubmitting = false;
+
+            const form = document.querySelector('form');
+            const btn = document.getElementById('loginBtn');
+
+            form.addEventListener('submit', function(e) {
+
+                if (isSubmitting) {
+                    e.preventDefault();
+                    return;
+                }
+
+                isSubmitting = true;
+
+                btn.disabled = true;
+                btn.innerText = 'Logging in...';
+            });
+
+        });
+    </script>
+
 
 
     <script>
@@ -192,6 +217,7 @@
 
         });
     </script>
+
 
 
 </x-guest-layout>
