@@ -97,6 +97,6 @@ class RegisteredUserController extends Controller
             return redirect()->route('worship-team');
         }
 
-        return back()->with('success', 'Please wait for the church admin’s approval before logging in.');
+        return back()->with('success', 'Please wait for the church admin approval before logging in.');
     }
 }

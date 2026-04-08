@@ -9,8 +9,8 @@
     <title>Project LEAD</title>
 
      <!-- LOGO -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/lead_icon.png') }}">
-    
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/leadv2_icon.png') }}">
+
     <!-- PrimeIcons -->
     <link href="https://unpkg.com/primeicons/primeicons.css" rel="stylesheet">
 

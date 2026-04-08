@@ -9,7 +9,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- LOGO -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/lead_icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/leadv2_icon.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

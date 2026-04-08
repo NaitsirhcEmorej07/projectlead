@@ -18,8 +18,18 @@ class ResetData extends Command
 
         $tables = [
             'users',
+
             'churches',
             'church_user',
+
+            'role_select',
+            'role_user',
+
+            'song_select',
+            'song_user',
+
+            'social_user',
+            
         ];
 
         foreach ($tables as $table) {
