@@ -188,94 +188,101 @@
                         </div>
 
                         <!-- 🔥 ADD SCHEDULE -->
-                        <div x-data="{ openForm: false }" @edit-schedule.window="openForm = true"
-                            class="border border-gray-200 rounded-2xl mb-5 overflow-hidden bg-white">
+                        @php
+                            $isAdmin = Auth::user()->type === 'admin';
+                        @endphp
 
-                            <!-- TOGGLE -->
-                            <button type="button" @click="openForm = !openForm"
-                                class="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition text-left">
+                        @if ($isAdmin)
+                            <div x-data="{ openForm: false }" @edit-schedule.window="openForm = true"
+                                class="border border-gray-200 rounded-2xl mb-5 overflow-hidden bg-white">
 
-                                <div>
-                                    <h3 class="text-sm font-semibold text-gray-900">Add Schedule</h3>
-                                    <p class="text-xs text-gray-500">Create schedule for this date</p>
+                                <!-- TOGGLE -->
+                                <button type="button" @click="openForm = !openForm"
+                                    class="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition text-left">
+
+                                    <div>
+                                        <h3 class="text-sm font-semibold text-gray-900">Add Schedule</h3>
+                                        <p class="text-xs text-gray-500">Create schedule for this date</p>
+                                    </div>
+
+                                    <i class="pi text-xs text-gray-400"
+                                        :class="openForm ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                                </button>
+
+                                <!-- FORM -->
+                                <div x-show="openForm" x-transition class="border-t border-gray-100 p-3">
+
+                                    <form
+                                        :action="formMode === 'add'
+                                            ?
+                                            '{{ route('worship-schedule.store') }}' :
+                                            `/worship-schedule/${formData.id}`"
+                                        method="POST" class="space-y-2">
+                                        @csrf
+
+                                        <template x-if="formMode === 'edit'">
+                                            <input type="hidden" name="_method" value="PUT">
+                                        </template>
+
+                                        <input type="hidden" name="sched_date" :value="selectedDate">
+
+                                        <!-- TITLE -->
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-500 mb-1">Title</label>
+                                            <input type="text" name="sched_title" x-model="formData.sched_title"
+                                                class="w-full rounded-xl border-gray-300 text-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 uppercase"
+                                                placeholder="Enter title"
+                                                oninput="this.value = this.value.toUpperCase()">
+                                        </div>
+
+                                        <!-- TIME + TYPE -->
+                                        <div class="grid grid-cols-2 gap-3">
+
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-500 mb-1">Time</label>
+                                                <input type="time" name="sched_time" x-model="formData.sched_time"
+                                                    class="w-full rounded-xl border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-500 mb-1">Type</label>
+                                                <select name="sched_type" x-model="formData.sched_type"
+                                                    class="w-full rounded-xl border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+
+                                                    <option value="" disabled>Select type</option>
+                                                    <option value="All Ministries">All Ministries</option>
+                                                    <option value="Music Ministry">Music Ministry</option>
+                                                    <option value="Dance Ministry">Dance Ministry</option>
+                                                    <option value="Kithcen Ministry">Kithcen Ministry</option>
+                                                    <option value="Children Ministry">Children Ministry</option>
+
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- DESCRIPTION -->
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-gray-500 mb-1">Description</label>
+                                            <textarea name="sched_description" rows="9" x-model="formData.sched_description"
+                                                class="w-full rounded-xl border-gray-300 text-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500"
+                                                placeholder="Add details..."></textarea>
+                                        </div>
+
+                                        <!-- BUTTON -->
+                                        <div class="pt-1">
+                                            <button type="submit"
+                                                class="w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition"
+                                                x-text="formMode === 'add' ? 'Save Schedule' : 'Update Schedule'">
+                                            </button>
+                                        </div>
+
+                                    </form>
+
                                 </div>
-
-                                <i class="pi text-xs text-gray-400"
-                                    :class="openForm ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                            </button>
-
-                            <!-- FORM -->
-                            <div x-show="openForm" x-transition class="border-t border-gray-100 p-3">
-
-                                <form
-                                    :action="formMode === 'add'
-                                        ?
-                                        '{{ route('worship-schedule.store') }}' :
-                                        `/worship-schedule/${formData.id}`"
-                                    method="POST" class="space-y-2">
-                                    @csrf
-
-                                    <template x-if="formMode === 'edit'">
-                                        <input type="hidden" name="_method" value="PUT">
-                                    </template>
-
-                                    <!-- DATE -->
-                                    <input type="hidden" name="sched_date" :value="selectedDate">
-
-                                    <!-- TITLE -->
-                                    <div>
-                                        <label class="block text-xs font-medium text-gray-500 mb-1">Title</label>
-                                        <input type="text" name="sched_title" x-model="formData.sched_title"
-                                            class="w-full rounded-xl border-gray-300 text-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 uppercase"
-                                            placeholder="Enter title" oninput="this.value = this.value.toUpperCase()">
-                                    </div>
-
-                                    <!-- TIME + TYPE -->
-                                    <div class="grid grid-cols-2 gap-3">
-
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-500 mb-1">Time</label>
-                                            <input type="time" name="sched_time" x-model="formData.sched_time"
-                                                class="w-full rounded-xl border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        </div>
-
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-500 mb-1">Type</label>
-                                            <select name="sched_type" x-model="formData.sched_type"
-                                                class="w-full rounded-xl border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
-
-                                                <option value="" disabled>Select type</option>
-                                                <option value="All Ministries">All Ministries</option>
-                                                <option value="Music Ministry">Music Ministry</option>
-                                                <option value="Dance Ministry">Dance Ministry</option>
-                                                <option value="Kithcen Ministry">Kithcen Ministry</option>
-                                                <option value="Children Ministry">Children Ministry</option>
-
-                                            </select>
-                                        </div>
-
-                                    </div>
-
-                                    <!-- DESCRIPTION -->
-                                    <div>
-                                        <label class="block text-xs font-medium text-gray-500 mb-1">Description</label>
-                                        <textarea name="sched_description" rows="9" x-model="formData.sched_description"
-                                            class="w-full rounded-xl border-gray-300 text-sm placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500"
-                                            placeholder="Add details..."></textarea>
-                                    </div>
-
-                                    <!-- BUTTON -->
-                                    <div class="pt-1">
-                                        <button type="submit"
-                                            class="w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition"
-                                            x-text="formMode === 'add' ? 'Save Schedule' : 'Update Schedule'">
-                                        </button>
-                                    </div>
-
-                                </form>
-
                             </div>
-                        </div>
+                        @endif
 
                         <!-- 🔥 LIST -->
                         <template x-if="selectedSchedules.length">
@@ -318,28 +325,36 @@
 
                                             </div>
 
-                                            <!-- 🔥 ACTIONS (BOTTOM ICONS) -->
-                                            <div class="mt-1 flex justify-center gap-1 border-t pt-1">
+                                            @php
+                                                $isAdmin = Auth::user()->type === 'admin';
+                                            @endphp
 
-                                                <!-- EDIT -->
-                                                <button @click="$dispatch('edit-schedule', sched)"
-                                                    class="p-1 text-gray-400 hover:text-indigo-600 transition">
-                                                    <i class="pi pi-pencil text-sm"></i>
-                                                </button>
+                                            @if ($isAdmin)
+                                                <!-- 🔥 ACTIONS (BOTTOM ICONS) -->
+                                                <div class="mt-1 flex justify-center gap-1 border-t pt-1">
 
-                                                <!-- DELETE -->
-                                                <form :action="`/worship-schedule/${sched.id}`" method="POST"
-                                                    onsubmit="return confirm('Delete this schedule?')">
-                                                    @csrf
-                                                    @method('DELETE')
 
-                                                    <button type="submit"
-                                                        class="p-1 text-gray-400 hover:text-red-600 transition">
-                                                        <i class="pi pi-trash text-sm"></i>
+                                                    <!-- EDIT -->
+                                                    <button @click="$dispatch('edit-schedule', sched)"
+                                                        class="p-1 text-gray-400 hover:text-indigo-600 transition">
+                                                        <i class="pi pi-pencil text-sm"></i>
                                                     </button>
-                                                </form>
 
-                                            </div>
+                                                    <!-- DELETE -->
+                                                    <form :action="`/worship-schedule/${sched.id}`" method="POST"
+                                                        onsubmit="return confirm('Delete this schedule?')">
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button type="submit"
+                                                            class="p-1 text-gray-400 hover:text-red-600 transition">
+                                                            <i class="pi pi-trash text-sm"></i>
+                                                        </button>
+                                                    </form>
+
+
+                                                </div>
+                                            @endif
 
                                         </div>
 

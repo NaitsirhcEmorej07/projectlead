@@ -10,10 +10,18 @@
             <!-- SEARCH -->
             <form method="GET" class="mb-4" x-data="searchComponent()">
 
-                <input type="text" name="search" x-model="query" @input="filterUsers" @keydown.enter="$el.form.submit()"
-                    value="{{ $search ?? '' }}" placeholder="Search by name..."
-                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200">
+                <div class="relative">
+                    <input type="text" name="search" x-model="query" @input="filterUsers"
+                        @keydown.enter="$el.form.submit()" value="{{ $search ?? '' }}" placeholder="Search by name..."
+                        class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 pr-10">
 
+                    <!-- ❌ CLEAR BUTTON -->
+                    <button type="button" x-show="query.length > 0" @click="clearSearch"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+
+                        <i class="pi pi-times text-sm"></i>
+                    </button>
+                </div>
 
                 <!-- SUGGESTIONS -->
                 <div x-show="filtered.length > 0" @click.outside="filtered = []"
@@ -116,6 +124,14 @@
                 selectUser(name) {
                     this.query = name;
                     this.filtered = [];
+                },
+
+                clearSearch() {
+                    this.query = '';
+                    this.filtered = [];
+
+                    // reload para mawala ?search
+                    window.location.href = window.location.pathname;
                 }
             }
         }

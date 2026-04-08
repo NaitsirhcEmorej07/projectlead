@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'church.admin' => \App\Http\Middleware\EnsureChurchAdmin::class,
         ]);
+
+        // 🔥 ADD THIS LINE
+        $middleware->redirectUsersTo(function () {
+            return route('worship-team');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

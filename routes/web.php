@@ -66,9 +66,11 @@ Route::middleware('auth')->group(function () {
 
     // WORSHIP SCHEDULE ----------------------------------------------------------------------------------------------
     Route::get('/worship-schedule', [ScheduleController::class, 'index'])->name('worship-schedule');
-    Route::post('/worship-schedule', [ScheduleController::class, 'store'])->name('worship-schedule.store');
-    Route::put('/worship-schedule/{id}', [ScheduleController::class, 'update'])->name('worship-schedule.update');
-    Route::delete('/worship-schedule/{id}', [ScheduleController::class, 'destroy'])->name('worship-schedule.destroy');
+    Route::middleware(['church.admin'])->group(function () {
+        Route::post('/worship-schedule', [ScheduleController::class, 'store'])->name('worship-schedule.store');
+        Route::put('/worship-schedule/{id}', [ScheduleController::class, 'update'])->name('worship-schedule.update');
+        Route::delete('/worship-schedule/{id}', [ScheduleController::class, 'destroy'])->name('worship-schedule.destroy');
+    });
 
     // PROFILE ----------------------------------------------------------------------------------------------
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
