@@ -238,8 +238,7 @@
 
                                         <!-- TIME + TYPE -->
                                         <div class="grid grid-cols-2 gap-3">
-
-                                            <div>
+                                            <div>   
                                                 <label class="block text-xs font-medium text-gray-500 mb-1">Time</label>
                                                 <input type="time" name="sched_time" x-model="formData.sched_time"
                                                     class="w-full rounded-xl border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">

@@ -1,13 +1,16 @@
 {
     "name": "Project LEAD",
     "short_name": "LEAD",
+    "description": "Worship team management made simple.",
+
     "start_url": "/",
     "scope": "/",
+
     "display": "standalone",
     "orientation": "portrait",
+    
     "background_color": "#ffffff",
     "theme_color": "#4f46e5",
-    "description": "Worship team management made simple.",
     "icons": [
         {
             "src": "/images/lead_icon_192.png",
