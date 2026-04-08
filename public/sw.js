@@ -1,8 +1,8 @@
 const CACHE_NAME = 'lead-cache-v2';
 
 const urlsToCache = [
-    '/',
-    '/login',
+    // '/',
+    // '/login',
 
     '/manifest.json',
     '/offline.html',
