@@ -114,4 +114,66 @@
 
         </div>
     </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // INSTALL CLICK
+            const installBtn = document.getElementById('installNow');
+            if (installBtn) {
+                installBtn.addEventListener('click', async () => {
+                    if (window.deferredPrompt) {
+                        window.deferredPrompt.prompt();
+
+                        const {
+                            outcome
+                        } = await window.deferredPrompt.userChoice;
+
+                        if (outcome === 'accepted') {
+                            console.log('User installed');
+                        }
+
+                        window.deferredPrompt = null;
+                        document.getElementById('installModal').classList.add('hidden');
+                    } else {
+                        alert('Install not available yet 😅');
+                    }
+                });
+            }
+
+            // CLOSE CLICK
+            const closeBtn = document.getElementById('closeInstall');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    document.getElementById('installModal').classList.add('hidden');
+                });
+            }
+
+            // 🔥 SECRET TRIGGER (3 clicks)
+            let logoClickCount = 0;
+            const logo = document.getElementById('leadLogo');
+
+            if (logo) {
+                logo.addEventListener('click', () => {
+                    logoClickCount++;
+
+                    console.log('Logo clicks:', logoClickCount);
+
+                    if (logoClickCount >= 3) {
+                        if (window.deferredPrompt) {
+                            document.getElementById('installModal').classList.remove('hidden');
+                        } else {
+                            alert('Install not available yet 😅');
+                        }
+
+                        logoClickCount = 0;
+                    }
+                });
+            }
+
+        });
+    </script>
+
+
 </x-guest-layout>
