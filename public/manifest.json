@@ -23,12 +23,6 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any"
-        },
-        {
-            "src": "/images/lead_icon_512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
         }
     ]
 }

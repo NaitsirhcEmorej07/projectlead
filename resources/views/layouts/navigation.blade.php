@@ -105,9 +105,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                            <x-dropdown-link :href="route('logout')" class="logout-btn">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
@@ -193,13 +191,34 @@
             <!-- Logout -->
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <x-responsive-nav-link :href="route('logout')"
-                    onclick="event.preventDefault(); this.closest('form').submit();">
+                <x-responsive-nav-link :href="route('logout')" class="logout-btn">
                     Log Out
                 </x-responsive-nav-link>
             </form>
 
         </div>
     </div>
-
 </nav>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        let isLoggingOut = false;
+
+        document.querySelectorAll('.logout-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                if (isLoggingOut) return;
+
+                isLoggingOut = true;
+
+                this.innerText = 'Logging out...';
+
+                this.closest('form').submit();
+            });
+        });
+
+    });
+</script>
