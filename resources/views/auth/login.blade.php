@@ -119,10 +119,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
+            if (localStorage.getItem('pwaInstalled')) {
+                return;
+            }
+
             // INSTALL CLICK
             const installBtn = document.getElementById('installNow');
             if (installBtn) {
                 installBtn.addEventListener('click', async () => {
+
                     if (window.deferredPrompt) {
                         window.deferredPrompt.prompt();
 
@@ -131,14 +136,19 @@
                         } = await window.deferredPrompt.userChoice;
 
                         if (outcome === 'accepted') {
-                            console.log('User installed');
+                            console.log('User installed ✅');
+                            localStorage.setItem('pwaInstalled', 'true');
                         }
 
                         window.deferredPrompt = null;
-                        document.getElementById('installModal').classList.add('hidden');
+
+                        const modal = document.getElementById('installModal');
+                        if (modal) modal.classList.add('hidden');
+
                     } else {
                         alert('Install not available yet 😅');
                     }
+
                 });
             }
 
@@ -146,29 +156,37 @@
             const closeBtn = document.getElementById('closeInstall');
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => {
-                    document.getElementById('installModal').classList.add('hidden');
+
+                    const modal = document.getElementById('installModal');
+                    if (modal) modal.classList.add('hidden');
+
+                    // mark as dismissed (para di spam)
+                    localStorage.setItem('installDismissed', 'true');
                 });
             }
 
-            // 🔥 SECRET TRIGGER (3 clicks)
+            // 🔥 SECRET TRIGGER (3x click sa logo)
             let logoClickCount = 0;
             const logo = document.getElementById('leadLogo');
 
             if (logo) {
                 logo.addEventListener('click', () => {
-                    logoClickCount++;
 
+                    logoClickCount++;
                     console.log('Logo clicks:', logoClickCount);
 
                     if (logoClickCount >= 3) {
+
                         if (window.deferredPrompt) {
-                            document.getElementById('installModal').classList.remove('hidden');
+                            const modal = document.getElementById('installModal');
+                            if (modal) modal.classList.remove('hidden');
                         } else {
                             alert('Install not available yet 😅');
                         }
 
                         logoClickCount = 0;
                     }
+
                 });
             }
 

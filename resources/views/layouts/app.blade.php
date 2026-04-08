@@ -71,24 +71,24 @@
 
         document.addEventListener('DOMContentLoaded', () => {
 
-            // ❗ CHECK IF ALREADY INSTALLED (skip everything)
+            // ✅ INIT (important)
+            window.deferredPrompt = null;
+
+            // ❗ CHECK IF ALREADY INSTALLED
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 console.log('Already installed ✅');
                 return;
             }
 
-            // CAPTURE install event (GLOBAL)
+            // CAPTURE install event
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
 
-                // ❗ PREVENT REPEATED POPUP
-                if (localStorage.getItem('installShown')) return;
+                // ✅ better UX (user choice based)
+                if (localStorage.getItem('installDismissed')) return;
 
                 window.deferredPrompt = e;
                 console.log('INSTALL READY 🔥');
-
-                // mark as shown
-                localStorage.setItem('installShown', 'true');
 
                 // AUTO SHOW MODAL
                 const modal = document.getElementById('installModal');
@@ -101,6 +101,7 @@
             const installBtn = document.getElementById('installNow');
             if (installBtn) {
                 installBtn.addEventListener('click', async () => {
+
                     if (window.deferredPrompt) {
                         window.deferredPrompt.prompt();
 
@@ -111,7 +112,7 @@
                         if (outcome === 'accepted') {
                             console.log('User installed ✅');
 
-                            // OPTIONAL: track install
+                            // optional tracking
                             localStorage.setItem('pwaInstalled', 'true');
                         }
 
@@ -119,9 +120,11 @@
 
                         const modal = document.getElementById('installModal');
                         if (modal) modal.classList.add('hidden');
+
                     } else {
                         alert('Install not available yet 😅');
                     }
+
                 });
             }
 
@@ -131,8 +134,17 @@
                 closeBtn.addEventListener('click', () => {
                     const modal = document.getElementById('installModal');
                     if (modal) modal.classList.add('hidden');
+
+                    // ✅ mark as dismissed (important)
+                    localStorage.setItem('installDismissed', 'true');
                 });
             }
+
+            // ✅ BONUS: detect installed
+            window.addEventListener('appinstalled', () => {
+                console.log('PWA installed 🎉');
+                localStorage.setItem('pwaInstalled', 'true');
+            });
 
         });
     </script>
