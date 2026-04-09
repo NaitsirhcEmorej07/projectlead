@@ -32,6 +32,8 @@ class ResetData extends Command
 
             'worship_devotions',
             'worship_devotion_comments',
+            'worship_devotion_likes',
+            
             
         ];
 
