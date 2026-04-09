@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lead-cache-v2';
+const CACHE_NAME = 'lead-cache-v3';
 
 const urlsToCache = [
     // '/',
@@ -10,7 +10,13 @@ const urlsToCache = [
     '/images/lead_icon.png',
     '/images/leadv2_icon.png',
     '/images/lead_icon_192.png',
-    '/images/lead_icon_512.png'
+    '/images/lead_icon_512.png',
+
+    '/worship-team',
+    '/worship-schedule',
+    '/profile',
+    '/approval',
+    '/songs',
 ];
 
 // 🧩 INSTALL → cache all important files
