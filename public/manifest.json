@@ -2,27 +2,22 @@
     "name": "Project LEAD",
     "short_name": "LEAD",
     "description": "Worship team management made simple.",
-
     "start_url": "/",
     "scope": "/",
-
     "display": "standalone",
     "orientation": "portrait",
-    
     "background_color": "#ffffff",
     "theme_color": "#000000",
     "icons": [
         {
-            "src": "/images/leadv2_icon.png",
+            "src": "/images/lead_icon_192.png",
             "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         },
         {
-            "src": "/images/lead_icon.png",
+            "src": "/images/lead_icon_512.png",
             "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         }
     ]
 }
