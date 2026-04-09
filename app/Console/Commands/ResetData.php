@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ResetData extends Command
 {
@@ -14,7 +15,8 @@ class ResetData extends Command
     {
         $this->info('Resetting data...');
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // ✅ Disable FK safely (works for PostgreSQL & MySQL)
+        Schema::disableForeignKeyConstraints();
 
         $tables = [
             'users',
@@ -33,8 +35,6 @@ class ResetData extends Command
             'worship_devotions',
             'worship_devotion_comments',
             'worship_devotion_likes',
-            
-            
         ];
 
         foreach ($tables as $table) {
@@ -42,7 +42,8 @@ class ResetData extends Command
             $this->info("Truncated: $table");
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // ✅ Enable back
+        Schema::enableForeignKeyConstraints();
 
         $this->info('Done! All selected tables are reset.');
     }
