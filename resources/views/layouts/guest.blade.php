@@ -43,7 +43,6 @@
 
     {{ $slot }}
 
-   
 </body>
 
 </html>

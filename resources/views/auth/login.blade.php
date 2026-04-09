@@ -91,29 +91,7 @@
         </div>
     </div>
 
-    <!-- INSTALL MODAL -->
-    <div id="installModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-sm text-center">
 
-            <img src="{{ asset('images/lead_icon_192.png') }}" class="w-16 h-16 mx-auto mb-3">
-
-            <h2 class="text-lg font-semibold">Install LEAD</h2>
-            <p class="text-sm text-gray-500 mb-4">
-                Get faster access and app-like experience.
-            </p>
-
-            <div class="flex gap-2">
-                <button id="installNow" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg">
-                    Install
-                </button>
-
-                <button id="closeInstall" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg">
-                    Not now
-                </button>
-            </div>
-
-        </div>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -138,86 +116,5 @@
 
         });
     </script>
-
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            if (localStorage.getItem('pwaInstalled')) {
-                return;
-            }
-
-            // INSTALL CLICK
-            const installBtn = document.getElementById('installNow');
-            if (installBtn) {
-                installBtn.addEventListener('click', async () => {
-
-                    if (window.deferredPrompt) {
-                        window.deferredPrompt.prompt();
-
-                        const {
-                            outcome
-                        } = await window.deferredPrompt.userChoice;
-
-                        if (outcome === 'accepted') {
-                            console.log('User installed ✅');
-                            localStorage.setItem('pwaInstalled', 'true');
-                        }
-
-                        window.deferredPrompt = null;
-
-                        const modal = document.getElementById('installModal');
-                        if (modal) modal.classList.add('hidden');
-
-                    } else {
-                        alert('Install not available yet 😅');
-                    }
-
-                });
-            }
-
-            // CLOSE CLICK
-            const closeBtn = document.getElementById('closeInstall');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-
-                    const modal = document.getElementById('installModal');
-                    if (modal) modal.classList.add('hidden');
-
-                    // mark as dismissed (para di spam)
-                    localStorage.setItem('installDismissed', 'true');
-                });
-            }
-
-            // 🔥 SECRET TRIGGER (3x click sa logo)
-            let logoClickCount = 0;
-            const logo = document.getElementById('leadLogo');
-
-            if (logo) {
-                logo.addEventListener('click', () => {
-
-                    logoClickCount++;
-                    console.log('Logo clicks:', logoClickCount);
-
-                    if (logoClickCount >= 3) {
-
-                        if (window.deferredPrompt) {
-                            const modal = document.getElementById('installModal');
-                            if (modal) modal.classList.remove('hidden');
-                        } else {
-                            alert('Install not available yet 😅');
-                        }
-
-                        logoClickCount = 0;
-                    }
-
-                });
-            }
-
-        });
-    </script>
-
-
 
 </x-guest-layout>

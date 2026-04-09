@@ -1,10 +1,10 @@
 <x-app-layout>
     <div class="p-3 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto space-y-6">
+        <div class="max-w-7xl mx-auto space-y-6 ">
 
             <!-- Update Profile Church (Admin only) -->
             @churchAdmin
-                <div class="flex justify-center">
+                <div class="flex justify-center border border-indigo-200">
                     <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl">
                         @include('profile.partials.update-profile-information-form')
                     </div>
@@ -14,7 +14,7 @@
 
             <!-- Update Profile User (User only) -->
             @churchUser
-                <div class="flex justify-center">
+                <div class="flex justify-center border border-indigo-200">
                     <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl">
                         @include('profile.partials.update-profile-information-form-user')
                     </div>
@@ -22,14 +22,14 @@
             @endchurchUser
 
             <!-- Update Password -->
-            <div class="flex justify-center">
+            <div class="flex justify-center border border-indigo-200">
                 <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl">
                     @include('profile.partials.update-password-form')
                 </div>
             </div>
 
             <!-- Delete User -->
-            <div class="flex justify-center">
+            <div class="flex justify-center border border-indigo-200">
                 <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl">
                     @include('profile.partials.delete-user-form')
                 </div>

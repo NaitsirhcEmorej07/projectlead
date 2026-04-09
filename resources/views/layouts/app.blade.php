@@ -52,6 +52,43 @@
         <main>
             {{ $slot }}
         </main>
+
+        <!-- INSTALL MODAL -->
+        <div id="installModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-sm text-center">
+
+                <img src="{{ asset('images/lead_icon_192.png') }}" class="w-16 h-16 mx-auto mb-3">
+
+                <h2 class="text-lg font-semibold">Install Project LEAD</h2>
+                <p class="text-sm text-gray-500 mb-4">
+                    Get faster access and app-like experience.
+                </p>
+
+                <div class="flex gap-2">
+                    <button id="installNow"
+                        class="flex-1 bg-indigo-600 text-white py-2 rounded-lg flex items-center justify-center gap-2">
+                        <i class="pi pi-download"></i>
+                        Install
+                    </button>
+
+                    <button id="closeInstall"
+                        class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg flex items-center justify-center gap-2">
+                        <i class="pi pi-times"></i>
+                        Not now
+                    </button>
+                </div>
+
+                <!-- ✅ Footer (added here) -->
+                <div class="text-center mt-6">
+                    <h3 class="text-xs font-normal italic text-gray-500 mt-4 leading-tight">
+                        "A worship team management app that organize team members, manage lineups, and plan
+                        schedules—keeping your team aligned for every service."
+                    </h3>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
 

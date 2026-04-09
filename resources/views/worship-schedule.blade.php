@@ -32,7 +32,7 @@
 
             <div x-data="calendarData()" @edit-schedule.window="editSchedule($event.detail)" class="max-w-7xl mx-auto">
 
-                <div class="bg-white shadow-sm rounded-2xl p-5 sm:p-6">
+                <div class="bg-white shadow-sm rounded-2xl p-5 sm:p-6 border border-indigo-200">
 
                     <!-- HEADER -->
                     <div class="mb-5">

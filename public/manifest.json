@@ -10,16 +10,16 @@
     "orientation": "portrait",
     
     "background_color": "#ffffff",
-    "theme_color": "#4f46e5",
+    "theme_color": "#000000",
     "icons": [
         {
-            "src": "/images/lead_icon_192.png",
+            "src": "/images/leadv2_icon.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any maskable"
         },
         {
-            "src": "/images/lead_icon_512.png",
+            "src": "/images/lead_icon.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any maskable"

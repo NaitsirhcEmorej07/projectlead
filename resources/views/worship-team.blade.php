@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="p-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6">
+        <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 border border-indigo-200">
 
             <!-- TITLE -->
             <h2 class="text-md font-semibold text-gray-800 mb-4 text-center">
@@ -35,11 +35,11 @@
             </form>
 
             <!-- USERS -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
 
                 @forelse($users as $user)
                     <a href="{{ route('worship.team.view', $user->id) }}"
-                        class="border rounded-xl p-3 flex gap-3 items-start bg-white shadow-sm hover:shadow-md transition block">
+                        class="border rounded-xl p-3 flex gap-3 items-start bg-white shadow-sm hover:shadow-md transition block ">
 
                         <!-- PROFILE IMAGE -->
                         <div x-data="{
