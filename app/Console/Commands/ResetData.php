@@ -29,6 +29,9 @@ class ResetData extends Command
             'song_user',
 
             'social_user',
+
+            'worship_devotions',
+            'worship_devotion_comments',
             
         ];
 

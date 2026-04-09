@@ -7,7 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\WorshipTeamController;
 use App\Http\Controllers\SongController;
-
+use App\Http\Controllers\WorshipDevotionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -80,13 +80,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile-song/store', [ProfileController::class, 'storeSong'])->name('profile-song.store');
     Route::put('/profile-song/update/{id}', [ProfileController::class, 'updateSong'])->name('profile-song.update');
     Route::delete('/profile-song/delete/{id}', [ProfileController::class, 'deleteSong'])->name('profile-song.delete');
+
+    // DEVOTION ----------------------------------------------------------------------------------------------
+    Route::get('/worship-devotions', [WorshipDevotionController::class, 'index'])->name('worship.devotions');
+    Route::post('/worship-devotions', [WorshipDevotionController::class, 'store'])->name('worship.devotions.store');
+    Route::post('/worship-devotions/comment', [WorshipDevotionController::class, 'comment'])->name('worship.devotions.comment');
+    Route::delete('/worship-devotions/{id}', [WorshipDevotionController::class, 'destroy'])->name('worship.devotions.destroy');
+    Route::post('/worship-devotions/{id}/react', [WorshipDevotionController::class, 'react'])->name('worship.devotions.react');
 });
 
 Route::get('/worship-team/public/{link}', [WorshipTeamController::class, 'publicView'])->name('worship.team.public');
 
 require __DIR__ . '/auth.php';
-
-
-Route::get('/calendar-preview', function () {
-    return view('worship-schedule');
-});

@@ -54,6 +54,12 @@
                         {{ __('Worship Schedule') }}
                     </x-nav-link>
                 </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('worship.devotions')" :active="request()->routeIs('worship.devotions')">
+                        {{ __('Worship Devotions') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -158,6 +164,10 @@
 
             <x-responsive-nav-link :href="route('worship-schedule')" :active="request()->routeIs('worship-schedule')">
                 Worship Schedule
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('worship.devotions')" :active="request()->routeIs('worship.devotions')">
+                Worship Devotions
             </x-responsive-nav-link>
 
             <!-- Divider -->
