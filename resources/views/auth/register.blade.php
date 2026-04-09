@@ -14,7 +14,7 @@
             <!-- Heading -->
             <div class="text-center mb-6">
                 <h1 class="text-lg font-semibold text-gray-900 tracking-wide">
-                    CHURCH ADMIN REGISTRATION
+                    ADMIN REGISTRATION
                 </h1>
                 <h3 class="text-sm text-gray-500 mt-0 leading-tight">
                     Worship team management made simple.
