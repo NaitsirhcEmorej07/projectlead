@@ -19,10 +19,10 @@
 
 <body class="font-sans text-gray-900 antialiased bg-gray-100">
 
-    <div class="min-h-screen flex items-center justify-center p-4">
+    <div class="min-h-screen flex items-center justify-center p-4 ">
 
         <!-- Main Card Wrapper -->
-        <div class="w-full max-w-md bg-white shadow-md rounded-2xl p-4 sm:p-8">
+        <div class="w-full max-w-md bg-white shadow-md rounded-2xl p-4 sm:p-8 border border-indigo-200">
 
             <!-- Logo -->
             <div class="text-center mb-0">
@@ -65,10 +65,10 @@
             <div class="space-y-3">
 
                 <!-- Admin Card -->
-                <a href="{{ route('register') }}" class="block">
+                <a href="{{ route('register') }}" class="block ">
                     <div
-                        class="w-full p-5 bg-gray-50 border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-white hover:shadow-sm transition">
-                        <div class="flex items-center gap-4">
+                        class="w-full p-5 bg-gray-50 border border-gray-300 rounded-xl hover:border-gray-300 hover:bg-white hover:shadow-sm transition">
+                        <div class="flex items-center gap-4 ">
                             <div
                                 class="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-white border">
                                 <i class="pi pi-shield text-blue-600 text-sm"></i>
@@ -86,7 +86,7 @@
                 <!-- User Card -->
                 <a href="{{ route('register.user') }}" class="block">
                     <div
-                        class="w-full p-5 bg-gray-50 border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-white hover:shadow-sm transition">
+                        class="w-full p-5 bg-gray-50 border border-gray-300 rounded-xl hover:border-gray-300 hover:bg-white hover:shadow-sm transition">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-white border">

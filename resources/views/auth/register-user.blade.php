@@ -39,7 +39,7 @@
     <div class="min-h-screen flex items-center justify-center p-4 bg-gray-100">
 
         <!-- Card -->
-        <div class="w-full max-w-md bg-white shadow-md rounded-2xl p-6 sm:p-8">
+        <div class="w-full max-w-md bg-white shadow-md rounded-2xl p-6 sm:p-8 border border-indigo-200">
 
             <!-- Logo -->
             <div class="text-center mb-2">

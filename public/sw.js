@@ -11,12 +11,6 @@ const urlsToCache = [
     '/images/leadv2_icon.png',
     '/images/lead_icon_192.png',
     '/images/lead_icon_512.png',
-
-    '/worship-team',
-    '/worship-schedule',
-    '/profile',
-    '/approval',
-    '/songs',
 ];
 
 // 🧩 INSTALL → cache all important files
