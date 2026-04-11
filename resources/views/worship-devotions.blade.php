@@ -336,7 +336,7 @@
 
                 <!-- TEXTAREA (AFTER PREVIEW) -->
                 <textarea name="content" class="w-full border rounded p-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-                    rows="16" placeholder="Write your devotion..."></textarea>
+                    rows="16" placeholder="Write your devotion..." required ></textarea>
 
                 <!-- ACTION BUTTONS -->
                 <div class="flex justify-end mt-3 space-x-2">
