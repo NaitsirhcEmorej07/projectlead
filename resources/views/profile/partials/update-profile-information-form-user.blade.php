@@ -45,16 +45,15 @@
                 <div class="flex justify-center">
 
                     <div class="relative">
-
                         <!-- Avatar -->
                         <template x-if="preview">
-                            <img :src="preview" class="h-16 w-16 rounded-full object-cover border">
+                            <img :src="preview" class="h-20 w-20 rounded-full object-cover border">
                         </template>
 
                         <!-- No Image -->
                         <template x-if="!preview">
                             <div
-                                class="h-16 w-16 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 text-xs border">
+                                class="h-20 w-20 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 text-xs border">
                                 No Photo
                             </div>
                         </template>
