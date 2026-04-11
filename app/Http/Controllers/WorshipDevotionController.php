@@ -70,15 +70,23 @@ class WorshipDevotionController extends Controller
             'parent_id'           => 'nullable|exists:worship_devotion_comments,id',
         ]);
 
-        WorshipDevotionComment::create([
+        $comment = WorshipDevotionComment::create([
             'worship_devotion_id' => $request->worship_devotion_id,
             'user_id'             => Auth::user()->id,
-            'church_id'           => session('church_id'), // ✅ FIXED
+            'church_id'           => session('church_id'),
             'comment'             => $request->comment,
             'parent_id'           => $request->parent_id,
         ]);
 
-        return back()->with('success', 'Comment added!');
+        $user = Auth::user();
+
+        return response()->json([
+            'name' => $user->name,
+            'comment' => $comment->comment,
+            'profile_picture' => $user->profile_picture
+                ? \Illuminate\Support\Facades\Storage::url($user->profile_picture)
+                : 'https://ui-avatars.com/api/?name=' . urlencode($user->name),
+        ]);
     }
 
     public function destroy($id)
@@ -157,5 +165,33 @@ class WorshipDevotionController extends Controller
             'status' => $status,
             'counts' => $counts
         ]);
+    }
+
+    public function reactions($id)
+    {
+        $churchId = session('church_id');
+
+        $devotion = WorshipDevotion::with('likes.user')
+            ->where('id', $id)
+            ->where('church_id', $churchId)
+            ->firstOrFail();
+
+        return response()->json(
+            $devotion->likes->map(function ($like) {
+
+                $user = $like->user;
+
+                return [
+                    'name' => $user ? $user->name : 'Unknown',
+
+                    // ✅ USE YOUR LEGACY (FIXED)
+                    'profile_picture' => ($user && $user->profile_picture)
+                        ? \Illuminate\Support\Facades\Storage::url($user->profile_picture)
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'User'),
+
+                    'reaction' => $like->reaction,
+                ];
+            })
+        );
     }
 }

@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="p-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto bg-white shadow-sm rounded-lg p-4 sm:p-6 border border-indigo-200">
+        <div class="max-w-4xl mx-auto bg-white shadow-sm rounded-lg p-4 sm:p-6 border border-gray-300">
 
             <!-- ===================== -->
             <!-- 👤 PROFILE -->

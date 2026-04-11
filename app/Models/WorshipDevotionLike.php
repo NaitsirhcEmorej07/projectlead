@@ -12,4 +12,9 @@ class WorshipDevotionLike extends Model
         'church_id',
         'reaction'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

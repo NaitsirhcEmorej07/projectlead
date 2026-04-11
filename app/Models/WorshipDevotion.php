@@ -39,6 +39,6 @@ class WorshipDevotion extends Model
 
     public function likes()
     {
-        return $this->hasMany(WorshipDevotionLike::class);
+        return $this->hasMany(WorshipDevotionLike::class, 'worship_devotion_id');
     }
 }

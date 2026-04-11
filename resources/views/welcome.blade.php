@@ -22,7 +22,7 @@
     <div class="min-h-screen flex items-center justify-center p-4 ">
 
         <!-- Main Card Wrapper -->
-        <div class="w-full max-w-md bg-white shadow-md rounded-2xl p-4 sm:p-8 border border-indigo-200">
+        <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-4 sm:p-8 border border-gray-300">
 
             <!-- Logo -->
             <div class="text-center mb-0">

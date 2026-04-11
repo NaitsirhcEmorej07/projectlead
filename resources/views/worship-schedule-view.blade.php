@@ -2,7 +2,7 @@
     <div class="p-3 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
 
-            <div class="bg-white shadow-sm rounded-2xl p-5 sm:p-6 border border-indigo-200">
+            <div class="bg-white shadow-sm rounded-2xl p-5 sm:p-6 border border-gray-300">
 
                 <!-- HEADER -->
                 <div class="mb-5">

@@ -87,6 +87,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/worship-devotions/comment', [WorshipDevotionController::class, 'comment'])->name('worship.devotions.comment');
     Route::delete('/worship-devotions/{id}', [WorshipDevotionController::class, 'destroy'])->name('worship.devotions.destroy');
     Route::post('/worship-devotions/{id}/react', [WorshipDevotionController::class, 'react'])->name('worship.devotions.react');
+    Route::get('/worship-devotions/{id}/reactions', [WorshipDevotionController::class, 'reactions']);
 });
 
 Route::get('/worship-team/public/{link}', [WorshipTeamController::class, 'publicView'])->name('worship.team.public');

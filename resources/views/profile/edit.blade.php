@@ -5,7 +5,7 @@
             <!-- Update Profile Church (Admin only) -->
             @churchAdmin
                 <div class="flex justify-center ">
-                    <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-indigo-200">
+                    <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-gray-300">
                         @include('profile.partials.update-profile-information-form')
                     </div>
                 </div>
@@ -15,7 +15,7 @@
             <!-- Update Profile User (User only) -->
             @churchUser
                 <div class="flex justify-center ">
-                    <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-indigo-200">
+                    <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-gray-300">
                         @include('profile.partials.update-profile-information-form-user')
                     </div>
                 </div>
@@ -23,14 +23,14 @@
 
             <!-- Update Password -->
             <div class="flex justify-center ">
-                <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-indigo-200">
+                <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-gray-300">
                     @include('profile.partials.update-password-form')
                 </div>
             </div>
 
             <!-- Delete User -->
             <div class="flex justify-center ">
-                <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-indigo-200">
+                <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-gray-300">
                     @include('profile.partials.delete-user-form')
                 </div>
             </div>

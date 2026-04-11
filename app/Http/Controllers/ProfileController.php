@@ -130,11 +130,18 @@ class ProfileController extends Controller
                         Storage::disk('public')->delete($church->logo);
                     }
 
+                    // store once
                     $path = $request->file('logo')->storePublicly('church-logos');
+
+                    // save to church
                     $church->logo = $path;
+
+                    // 🔥 ALSO save to user profile picture
+                    $user->profile_picture = $path;
                 }
 
                 $church->save();
+                $user->save();
             }
         }
 

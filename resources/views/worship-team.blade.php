@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="p-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 border border-indigo-200">
+        <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 border border-gray-300">
 
             <!-- TITLE -->
             <h2 class="text-md font-semibold text-gray-800 mb-4 text-center">

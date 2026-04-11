@@ -159,14 +159,17 @@
             </x-responsive-nav-link> --}}
 
             <x-responsive-nav-link :href="route('worship-team')" :active="request()->routeIs('worship-team')">
+                <i class="pi pi-users mr-2"></i>
                 Worship Teams
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('worship-schedule')" :active="request()->routeIs('worship-schedule')">
+                <i class="pi pi-calendar mr-2"></i>
                 Worship Schedule
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('worship.devotions')" :active="request()->routeIs('worship.devotions')">
+                <i class="pi pi-book mr-2"></i>
                 Worship Devotions
             </x-responsive-nav-link>
 
@@ -175,34 +178,37 @@
 
             <!-- Profile -->
             <x-responsive-nav-link :href="route('profile.edit')">
+                <i class="pi pi-user mr-2"></i>
                 Profile Settings
             </x-responsive-nav-link>
 
             @auth
                 @if (auth()->user()->churches()->count() > 1)
                     <x-responsive-nav-link :href="route('select-church')">
+                        <i class="pi pi-sitemap mr-2"></i>
                         Church Selection
                     </x-responsive-nav-link>
                 @endif
             @endauth
 
-
             @churchAdmin
                 <x-responsive-nav-link :href="route('approval')">
+                    <i class="pi pi-check-circle mr-2"></i>
                     Approval Settings
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('songs.index')">
+                    <i class="pi pi-volume-up mr-2"></i>
                     Song Settings
                 </x-responsive-nav-link>
             @endchurchAdmin
-
 
             <!-- Logout -->
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <x-responsive-nav-link :href="route('logout')" class="logout-btn">
-                    Log Out
+                    <i class="pi pi-sign-out mr-2"></i>
+                    <span class="logout-text">Log Out</span>
                 </x-responsive-nav-link>
             </form>
 
@@ -224,7 +230,11 @@
 
                 isLoggingOut = true;
 
-                this.innerText = 'Logging out...';
+                // change only text, keep icon
+                const text = this.querySelector('.logout-text');
+                if (text) {
+                    text.innerText = 'Logging out...';
+                }
 
                 this.closest('form').submit();
             });

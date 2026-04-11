@@ -45,12 +45,16 @@
                             $myReaction = $devotion->likes->where('user_id', Auth::id())->first()->reaction ?? null;
                         @endphp
 
-                        <div class="relative group">
+                        <div class="relative"
+                            onmouseenter="if(window.innerWidth > 768) showReactions({{ $devotion->id }})"
+                            onmouseleave="if(window.innerWidth > 768) hideReactions({{ $devotion->id }})">
 
                             <!-- MAIN BUTTON -->
                             <button id="react-btn-{{ $devotion->id }}"
+                                onclick="toggleReactionBox(event, {{ $devotion->id }})"
                                 class="flex items-center gap-1 transition hover:text-blue-500 
-        {{ $myReaction ? 'text-blue-500' : '' }}">
+                                {{ $myReaction ? 'text-blue-500' : '' }}">
+
                                 <span id="react-icon-{{ $devotion->id }}">
                                     @if ($myReaction == 'like')
                                         👍
@@ -58,8 +62,8 @@
                                         ❤️
                                     @elseif($myReaction == 'wow')
                                         😮
-                                    @elseif($myReaction == 'haha')
-                                        😂
+                                    @elseif($myReaction == 'praise')
+                                        🙌
                                     @else
                                         👍
                                     @endif
@@ -71,14 +75,24 @@
                             </button>
 
                             <!-- REACTION PICKER -->
-                            <div
-                                class="absolute hidden group-hover:flex space-x-2 bg-white shadow p-2 rounded -top-12 left-0 z-10">
+                            <div id="reaction-box-{{ $devotion->id }}" onclick="event.stopPropagation()"
+                                class="absolute opacity-0 pointer-events-none
+                                transition-all duration-200
+                                bg-white shadow-lg px-3 py-2 rounded-full
+                                flex items-center gap-2
+                                -top-11 left-0 z-10">
 
-                                <button onclick="react({{ $devotion->id }}, 'like')">👍</button>
-                                <button onclick="react({{ $devotion->id }}, 'heart')">❤️</button>
-                                <button onclick="react({{ $devotion->id }}, 'wow')">😮</button>
-                                <button onclick="react({{ $devotion->id }}, 'haha')">😂</button>
+                                <button onclick="react({{ $devotion->id }}, 'like')"
+                                    class="text-lg hover:scale-150 transition-transform duration-150">👍</button>
 
+                                <button onclick="react({{ $devotion->id }}, 'heart')"
+                                    class="text-lg hover:scale-150 transition-transform duration-150">❤️</button>
+
+                                <button onclick="react({{ $devotion->id }}, 'praise')"
+                                    class="text-lg hover:scale-150 transition-transform duration-150">🙌</button>
+
+                                <button onclick="react({{ $devotion->id }}, 'wow')"
+                                    class="text-lg hover:scale-150 transition-transform duration-150">😮</button>
                             </div>
                         </div>
 
@@ -112,27 +126,35 @@
                             </div>
                         @endif
 
+                        <!-- VIEW REACTIONS -->
+                        <button onclick="openReactions({{ $devotion->id }})"
+                            class="flex items-center gap-1 hover:text-blue-500 transition">
+
+                            <i class="pi pi-info-circle"></i>
+                            <span id="reaction-count-{{ $devotion->id }}">
+                                {{ $devotion->likes->count() }}
+                            </span>
+                        </button>
+
+
                     </div>
 
                     <!-- COMMENTS -->
                     <div id="comments-{{ $devotion->id }}" class="mt-3 hidden">
 
                         <!-- COMMENT FORM -->
-                        <form onsubmit="submitComment(event, {{ $devotion->id }})"
-                            class="flex items-center gap-2 mt-2">
+                        <div class="flex items-center gap-2 mt-2">
 
-                            <!-- INPUT -->
-                            <input type="text" name="comment" placeholder="Write a comment..."
-                                class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm 
-               focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <input type="text" id="comment-input-{{ $devotion->id }}"
+                                placeholder="Write a comment..."
+                                class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm">
 
-                            <!-- BUTTON -->
-                            <button type="submit"
-                                class="text-blue-500 text-sm font-semibold hover:text-blue-600 transition">
+                            <button type="button" onclick="submitComment({{ $devotion->id }})"
+                                class="text-blue-500 text-sm font-semibold">
                                 Post
                             </button>
 
-                        </form>
+                        </div>
 
                         <!-- COMMENT LIST -->
                         <div id="comment-list-{{ $devotion->id }}" class="space-y-3 mt-5">
@@ -247,6 +269,27 @@
         </div>
     </div>
 
+
+    <div id="reactionModal"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-5">
+
+        <div class="bg-white w-full max-w-sm rounded-lg p-4">
+
+            <div class="flex justify-between items-center mb-3">
+                <span class="font-semibold">Reactions</span>
+                <button onclick="closeReactionModal()">
+                    <i class="pi pi-times"></i>
+                </button>
+            </div>
+
+            <div id="reactionList" class="space-y-3 max-h-80 overflow-y-auto">
+                <!-- dynamic -->
+            </div>
+
+        </div>
+    </div>
+
+
     <script>
         // MODAL
         function openModal() {
@@ -279,11 +322,11 @@
         }
 
         // COMMENT SUBMIT
-        function submitComment(e, id) {
-            e.preventDefault();
+        function submitComment(id) {
 
-            let form = e.target;
-            let input = form.querySelector('input[name="comment"]');
+            let input = document.getElementById('comment-input-' + id);
+
+            if (!input.value.trim()) return;
 
             fetch("{{ route('worship.devotions.comment') }}", {
                     method: "POST",
@@ -296,7 +339,38 @@
                         comment: input.value
                     })
                 })
-                .then(res => location.reload());
+                .then(res => res.json())
+                .then(data => {
+
+                    let list = document.getElementById('comment-list-' + id);
+
+                    let html = `
+                                    <div class="flex items-start gap-2">
+                                        <img src="${data.profile_picture}" 
+                                            class="w-8 h-8 rounded-full object-cover">
+
+                                        <div class="flex flex-col">
+                                            <div class="bg-gray-100 px-3 py-2 rounded-2xl max-w-md">
+                                                <div class="text-xs font-semibold text-gray-800">
+                                                    ${data.name}
+                                                </div>
+
+                                                <div class="text-xs text-gray-700">
+                                                    ${data.comment}
+                                                </div>
+                                            </div>
+
+                                            <div class="text-[11px] text-gray-400 mt-1 ml-2">
+                                                just now
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+
+                    list.insertAdjacentHTML('afterbegin', html);
+
+                    input.value = '';
+                });
         }
 
         function react(id, reaction) {
@@ -326,7 +400,7 @@
                         like: '👍',
                         heart: '❤️',
                         wow: '😮',
-                        haha: '😂'
+                        praise: '🙌'
                     };
 
                     if (data.status === 'removed') {
@@ -343,7 +417,102 @@
                     btn.classList.add('scale-110');
                     setTimeout(() => btn.classList.remove('scale-110'), 150);
 
+                    // ✅ 🔥 AUTO CLOSE (IMPORTANT FIX)
+                    setTimeout(() => {
+                        hideReactions(id);
+                    }, 100);
+
+                })
+                .catch(err => {
+                    console.error('Reaction error:', err);
                 });
+        }
+
+        let reactionTimeout = {};
+
+        function showReactions(id) {
+            clearTimeout(reactionTimeout[id]);
+
+            const box = document.getElementById('reaction-box-' + id);
+            box.classList.remove('opacity-0', 'pointer-events-none');
+            box.classList.add('opacity-100');
+        }
+
+        function hideReactions(id) {
+            reactionTimeout[id] = setTimeout(() => {
+                const box = document.getElementById('reaction-box-' + id);
+                box.classList.add('opacity-0', 'pointer-events-none');
+                box.classList.remove('opacity-100');
+            }, 200); // 👈 delay like FB
+        }
+
+        function toggleReactionBox(e, id) {
+            e.stopPropagation();
+
+            const box = document.getElementById('reaction-box-' + id);
+            const isHidden = box.classList.contains('opacity-0');
+
+            if (isHidden) {
+                showReactions(id);
+            } else {
+                hideReactions(id);
+            }
+        }
+
+        // close when clicking outside
+        document.addEventListener('click', (e) => {
+            document.querySelectorAll('[id^="reaction-box-"]').forEach(box => {
+                box.classList.add('opacity-0', 'pointer-events-none');
+            });
+        });
+
+        function openReactions(id) {
+
+            // show modal
+            document.getElementById('reactionModal').classList.remove('hidden');
+
+            fetch(`/worship-devotions/${id}/reactions`)
+                .then(res => res.json())
+                .then(data => {
+
+                    const list = document.getElementById('reactionList');
+                    list.innerHTML = '';
+
+                    data.forEach(user => {
+
+                        list.innerHTML += `
+                                    <div class="flex items-center gap-2">
+                                        <img src="${user.profile_picture}" 
+                                            onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}';"
+                                            class="w-8 h-8 rounded-full object-cover">
+
+                                        <div class="flex-1 text-sm">
+                                            ${user.name}
+                                        </div>
+
+                                        <div class="text-lg">
+                                            ${getReactionIcon(user.reaction)}
+                                        </div>
+                                    </div>
+                                `;
+                    });
+
+                });
+        }
+
+        function closeReactionModal() {
+            document.getElementById('reactionModal').classList.add('hidden');
+        }
+
+        // helper
+        function getReactionIcon(type) {
+            const icons = {
+                like: '👍',
+                heart: '❤️',
+                wow: '😮',
+                praise: '🙌'
+            };
+            return icons[type] || '👍';
         }
     </script>
 
