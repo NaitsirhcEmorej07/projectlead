@@ -44,21 +44,23 @@
                             $count = $devotion->images->count();
                         @endphp
 
-                        <div class="mt-2 flex justify-center">
-                            <div class="w-full md:max-w-md lg:max-w-lg">
+                        <div class="mt-2">
+                            <div class="w-full">
 
                                 {{-- 1 IMAGE --}}
                                 @if ($count == 1)
-                                    <div class="h-56 md:h-48 border border-gray-200 rounded-lg overflow-hidden">
+                                    <div
+                                        class="w-full max-h-[500px] border border-gray-200 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
                                         <img src="{{ Storage::url($devotion->images[0]->image_path) }}"
-                                            class="object-cover w-full h-full">
+                                            class="object-contain max-h-[500px]">
                                     </div>
-
+                                    
                                     {{-- 2 IMAGES --}}
                                 @elseif ($count == 2)
                                     <div class="grid grid-cols-2 gap-1">
                                         @foreach ($devotion->images as $img)
-                                            <div class="h-40 md:h-36 border border-gray-200 rounded-lg overflow-hidden">
+                                            <div
+                                                class="aspect-square border border-gray-200 rounded-lg overflow-hidden">
                                                 <img src="{{ Storage::url($img->image_path) }}"
                                                     class="object-cover w-full h-full">
                                             </div>
@@ -69,15 +71,18 @@
                                 @elseif ($count == 3)
                                     <div class="grid grid-cols-2 gap-1">
 
+                                        {{-- top 2 --}}
                                         @foreach ($devotion->images->take(2) as $img)
-                                            <div class="h-40 md:h-36 border border-gray-200 rounded-lg overflow-hidden">
+                                            <div
+                                                class="aspect-square border border-gray-200 rounded-lg overflow-hidden">
                                                 <img src="{{ Storage::url($img->image_path) }}"
                                                     class="object-cover w-full h-full">
                                             </div>
                                         @endforeach
 
+                                        {{-- bottom full --}}
                                         <div
-                                            class="col-span-2 h-40 md:h-36 border border-gray-200 rounded-lg overflow-hidden">
+                                            class="col-span-2 aspect-[16/9] border border-gray-200 rounded-lg overflow-hidden">
                                             <img src="{{ Storage::url($devotion->images[2]->image_path) }}"
                                                 class="object-cover w-full h-full">
                                         </div>
@@ -88,7 +93,8 @@
                                 @else
                                     <div class="grid grid-cols-2 gap-1">
                                         @foreach ($devotion->images->take(4) as $img)
-                                            <div class="h-40 md:h-36 border border-gray-200 rounded-lg overflow-hidden">
+                                            <div
+                                                class="aspect-square border border-gray-200 rounded-lg overflow-hidden">
                                                 <img src="{{ Storage::url($img->image_path) }}"
                                                     class="object-cover w-full h-full">
                                             </div>
@@ -375,6 +381,18 @@
         </div>
     </div>
 
+    <!-- 🔹 LOADING OVERLAY -->
+    <div id="loadingOverlay"
+        class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
+
+        <div class="bg-white px-6 py-4 rounded-lg flex items-center gap-3 shadow-lg">
+            <i class="pi pi-spin pi-spinner text-blue-500 text-xl"></i>
+            <span class="text-sm font-medium text-gray-700">Posting...</span>
+        </div>
+
+    </div>
+
+
 
     <script>
         // =========================
@@ -394,10 +412,17 @@
         // 🔹 POST DEVOTION (AJAX)
         // Submit form without page reload
         // =========================
+        // =========================
+        // 🔹 POST DEVOTION (AJAX)
+        // Submit form without page reload
+        // =========================
         document.getElementById('postForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             let formData = new FormData(this);
+
+            // 🔥 SHOW LOADING OVERLAY
+            document.getElementById('loadingOverlay').classList.remove('hidden');
 
             fetch("{{ route('worship.devotions.store') }}", {
                     method: "POST",
@@ -406,7 +431,28 @@
                     },
                     body: formData
                 })
-                .then(res => location.reload()); // refresh after submit
+                .then(async res => {
+
+                    // ❌ if may error (like file too big)
+                    if (!res.ok) {
+                        let error = await res.json();
+
+                        alert(error.errors?.['images.0']?.[0] ?? 'Upload failed');
+
+                        // 🔥 HIDE LOADING
+                        document.getElementById('loadingOverlay').classList.add('hidden');
+                        return;
+                    }
+
+                    // ✅ success
+                    location.reload();
+                })
+                .catch(err => {
+                    console.error(err);
+
+                    // 🔥 HIDE LOADING (safety)
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                });
         });
 
 
@@ -657,10 +703,19 @@
 
                 const files = Array.from(this.files);
 
+                // 🔥 FILE SIZE VALIDATION (ADD THIS)
+                for (let file of files) {
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('Max file size is 5MB');
+                        this.value = ''; // reset input
+                        return;
+                    }
+                }
+
                 // 🔥 limit max 4 images
                 if (files.length > 4) {
                     alert('Max 4 images only');
-                    this.value = ''; // reset input
+                    this.value = '';
                     return;
                 }
 
