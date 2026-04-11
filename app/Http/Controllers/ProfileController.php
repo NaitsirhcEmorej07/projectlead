@@ -25,7 +25,9 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // 🔥 Get all roles
-        $roles = DB::table('role_select')->get();
+        $roles = DB::table('role_select')
+            ->orderBy('role_name', 'asc')
+            ->get();
 
         // 🔥 Get user selected roles
         $userRoleIds = $user->roles()->pluck('role_select.id')->toArray();

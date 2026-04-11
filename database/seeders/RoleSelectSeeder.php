@@ -65,6 +65,25 @@ class RoleSelectSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
+                [
+                    'role_name' => 'Dance Ministry',
+                    'role_slug' => 'dance_ministry',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'role_name' => 'Children Ministry',
+                    'role_slug' => 'children_ministry',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'role_name' => 'Kitchen Ministry',
+                    'role_slug' => 'kitchen_ministry',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+
             ],
             ['role_slug'], // 🔑 unique key (conflict checker)
             ['role_name', 'updated_at'] // 🔄 columns to update
