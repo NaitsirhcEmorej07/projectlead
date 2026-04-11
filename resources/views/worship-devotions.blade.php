@@ -35,9 +35,70 @@
                     </div>
 
                     <!-- Content -->
-                    <div class="mt-0 text-xs text-gray-700 whitespace-pre-line leading-tight">
+                    <div class="mt-0 text-sm text-gray-700 whitespace-pre-line leading-tight">
                         {{ $devotion->content }}
                     </div>
+
+                    @if ($devotion->images->count())
+                        @php
+                            $count = $devotion->images->count();
+                        @endphp
+
+                        <div class="mt-2 flex justify-center">
+                            <div class="w-full md:max-w-md lg:max-w-lg">
+
+                                {{-- 1 IMAGE --}}
+                                @if ($count == 1)
+                                    <div class="h-56 md:h-48 border border-gray-200 rounded-lg overflow-hidden">
+                                        <img src="{{ Storage::url($devotion->images[0]->image_path) }}"
+                                            class="object-cover w-full h-full">
+                                    </div>
+
+                                    {{-- 2 IMAGES --}}
+                                @elseif ($count == 2)
+                                    <div class="grid grid-cols-2 gap-1">
+                                        @foreach ($devotion->images as $img)
+                                            <div class="h-40 md:h-36 border border-gray-200 rounded-lg overflow-hidden">
+                                                <img src="{{ Storage::url($img->image_path) }}"
+                                                    class="object-cover w-full h-full">
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    {{-- 3 IMAGES --}}
+                                @elseif ($count == 3)
+                                    <div class="grid grid-cols-2 gap-1">
+
+                                        @foreach ($devotion->images->take(2) as $img)
+                                            <div class="h-40 md:h-36 border border-gray-200 rounded-lg overflow-hidden">
+                                                <img src="{{ Storage::url($img->image_path) }}"
+                                                    class="object-cover w-full h-full">
+                                            </div>
+                                        @endforeach
+
+                                        <div
+                                            class="col-span-2 h-40 md:h-36 border border-gray-200 rounded-lg overflow-hidden">
+                                            <img src="{{ Storage::url($devotion->images[2]->image_path) }}"
+                                                class="object-cover w-full h-full">
+                                        </div>
+
+                                    </div>
+
+                                    {{-- 4+ IMAGES --}}
+                                @else
+                                    <div class="grid grid-cols-2 gap-1">
+                                        @foreach ($devotion->images->take(4) as $img)
+                                            <div class="h-40 md:h-36 border border-gray-200 rounded-lg overflow-hidden">
+                                                <img src="{{ Storage::url($img->image_path) }}"
+                                                    class="object-cover w-full h-full">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                            </div>
+                        </div>
+                    @endif
 
                     <div class="flex justify-between mt-4 text-sm text-gray-500 border-t pt-2">
 
@@ -197,6 +258,8 @@
                         </div>
                     </div>
 
+
+
                 </div>
             @endforeach
 
@@ -242,12 +305,35 @@
     <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-lg w-full max-w-md p-4">
 
-            <h2 class="font-semibold mb-2">Create Devotion</h2>
+            <h2 class="font-semibold mb-3">Create Devotion</h2>
 
-            <form id="postForm">
+            <form id="postForm" enctype="multipart/form-data">
                 @csrf
-                <textarea name="content" class="w-full border rounded p-2 text-sm" rows="17"></textarea>
-                <div class="flex justify-end mt-2 space-x-2">
+
+                <label
+                    class="flex items-center gap-2 w-full border border-dashed border-gray-300 rounded-md px-3 py-2 mb-2 cursor-pointer hover:border-blue-400 hover:bg-gray-50 transition">
+
+                    <!-- ICON -->
+                    <i class="pi pi-image text-gray-400"></i>
+
+                    <!-- TEXT -->
+                    <span class="text-xs text-gray-500">
+                        Add images (max 4)
+                    </span>
+
+                    <!-- HIDDEN INPUT -->
+                    <input type="file" name="images[]" multiple accept="image/*" class="hidden">
+                </label>
+
+                <!-- IMAGE PREVIEW (SMALLER) -->
+                <div id="image-preview" class="flex justify-center gap-2 mb-3 overflow-x-auto max-w-full"></div>
+
+                <!-- TEXTAREA (AFTER PREVIEW) -->
+                <textarea name="content" class="w-full border rounded p-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+                    rows="16" placeholder="Write your devotion..."></textarea>
+
+                <!-- ACTION BUTTONS -->
+                <div class="flex justify-end mt-3 space-x-2">
 
                     <button type="button" onclick="closeModal()"
                         class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-gray-800">
@@ -291,7 +377,10 @@
 
 
     <script>
-        // MODAL
+        // =========================
+        // 🔹 MODAL CONTROL
+        // Open & Close ng post modal
+        // =========================
         function openModal() {
             document.getElementById('postModal').classList.remove('hidden');
         }
@@ -300,7 +389,11 @@
             document.getElementById('postModal').classList.add('hidden');
         }
 
-        // POST DEVOTION (AJAX)
+
+        // =========================
+        // 🔹 POST DEVOTION (AJAX)
+        // Submit form without page reload
+        // =========================
         document.getElementById('postForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -313,19 +406,28 @@
                     },
                     body: formData
                 })
-                .then(res => location.reload()); // simple refresh (later realtime insert)
+                .then(res => location.reload()); // refresh after submit
         });
 
-        // TOGGLE COMMENTS
+
+        // =========================
+        // 🔹 TOGGLE COMMENTS
+        // Show/Hide comment section per post
+        // =========================
         function toggleComments(id) {
             document.getElementById('comments-' + id).classList.toggle('hidden');
         }
 
-        // COMMENT SUBMIT
+
+        // =========================
+        // 🔹 COMMENT SUBMIT (AJAX)
+        // Send comment + auto display sa UI
+        // =========================
         function submitComment(id) {
 
             let input = document.getElementById('comment-input-' + id);
 
+            // prevent empty comment
             if (!input.value.trim()) return;
 
             fetch("{{ route('worship.devotions.comment') }}", {
@@ -344,35 +446,43 @@
 
                     let list = document.getElementById('comment-list-' + id);
 
+                    // create new comment HTML
                     let html = `
-                                    <div class="flex items-start gap-2">
-                                        <img src="${data.profile_picture}" 
-                                            class="w-8 h-8 rounded-full object-cover">
+                    <div class="flex items-start gap-2">
+                        <img src="${data.profile_picture}" 
+                            class="w-8 h-8 rounded-full object-cover">
 
-                                        <div class="flex flex-col">
-                                            <div class="bg-gray-100 px-3 py-2 rounded-2xl max-w-md">
-                                                <div class="text-xs font-semibold text-gray-800">
-                                                    ${data.name}
-                                                </div>
+                        <div class="flex flex-col">
+                            <div class="bg-gray-100 px-3 py-2 rounded-2xl max-w-md">
+                                <div class="text-xs font-semibold text-gray-800">
+                                    ${data.name}
+                                </div>
 
-                                                <div class="text-xs text-gray-700">
-                                                    ${data.comment}
-                                                </div>
-                                            </div>
+                                <div class="text-xs text-gray-700">
+                                    ${data.comment}
+                                </div>
+                            </div>
 
-                                            <div class="text-[11px] text-gray-400 mt-1 ml-2">
-                                                just now
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
+                            <div class="text-[11px] text-gray-400 mt-1 ml-2">
+                                just now
+                            </div>
+                        </div>
+                    </div>
+                `;
 
+                    // insert comment sa taas
                     list.insertAdjacentHTML('afterbegin', html);
 
+                    // clear input
                     input.value = '';
                 });
         }
 
+
+        // =========================
+        // 🔹 REACTIONS (LIKE, HEART, ETC.)
+        // Handle react / unreact + UI update
+        // =========================
         function react(id, reaction) {
             fetch(`/worship-devotions/${id}/react`, {
                     method: "POST",
@@ -387,7 +497,7 @@
                 .then(res => res.json())
                 .then(data => {
 
-                    // 🔥 UPDATE TOTAL COUNT
+                    // 🔥 compute total reactions
                     let total = 0;
                     Object.values(data.counts).forEach(v => total += v);
                     document.getElementById('reaction-count-' + id).innerText = total;
@@ -395,7 +505,7 @@
                     const btn = document.getElementById('react-btn-' + id);
                     const icon = document.getElementById('react-icon-' + id);
 
-                    // 🔥 ICON MAP
+                    // reaction icons mapping
                     const icons = {
                         like: '👍',
                         heart: '❤️',
@@ -404,20 +514,20 @@
                     };
 
                     if (data.status === 'removed') {
-                        // ❌ UNLIKE
+                        // ❌ user removed reaction
                         btn.classList.remove('text-blue-500');
                         icon.innerText = '👍';
                     } else {
-                        // ✅ ADD / UPDATE
+                        // ✅ add/update reaction
                         btn.classList.add('text-blue-500');
                         icon.innerText = icons[reaction];
                     }
 
-                    // 🔥 SMALL ANIMATION
+                    // 🔥 small click animation
                     btn.classList.add('scale-110');
                     setTimeout(() => btn.classList.remove('scale-110'), 150);
 
-                    // ✅ 🔥 AUTO CLOSE (IMPORTANT FIX)
+                    // 🔥 auto close reaction box
                     setTimeout(() => {
                         hideReactions(id);
                     }, 100);
@@ -428,6 +538,11 @@
                 });
         }
 
+
+        // =========================
+        // 🔹 REACTION HOVER BOX (FB style)
+        // show/hide reactions popup
+        // =========================
         let reactionTimeout = {};
 
         function showReactions(id) {
@@ -443,7 +558,7 @@
                 const box = document.getElementById('reaction-box-' + id);
                 box.classList.add('opacity-0', 'pointer-events-none');
                 box.classList.remove('opacity-100');
-            }, 200); // 👈 delay like FB
+            }, 200); // delay para smooth like FB
         }
 
         function toggleReactionBox(e, id) {
@@ -459,13 +574,18 @@
             }
         }
 
-        // close when clicking outside
+        // close all reaction boxes when clicking outside
         document.addEventListener('click', (e) => {
             document.querySelectorAll('[id^="reaction-box-"]').forEach(box => {
                 box.classList.add('opacity-0', 'pointer-events-none');
             });
         });
 
+
+        // =========================
+        // 🔹 REACTION MODAL (list of users)
+        // show users who reacted
+        // =========================
         function openReactions(id) {
 
             // show modal
@@ -478,23 +598,24 @@
                     const list = document.getElementById('reactionList');
                     list.innerHTML = '';
 
+                    // loop users
                     data.forEach(user => {
 
                         list.innerHTML += `
-                                    <div class="flex items-center gap-2">
-                                        <img src="${user.profile_picture}" 
-                                            onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}';"
-                                            class="w-8 h-8 rounded-full object-cover">
+                        <div class="flex items-center gap-2">
+                            <img src="${user.profile_picture}" 
+                                onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}';"
+                                class="w-8 h-8 rounded-full object-cover">
 
-                                        <div class="flex-1 text-sm">
-                                            ${user.name}
-                                        </div>
+                            <div class="flex-1 text-sm">
+                                ${user.name}
+                            </div>
 
-                                        <div class="text-lg">
-                                            ${getReactionIcon(user.reaction)}
-                                        </div>
-                                    </div>
-                                `;
+                            <div class="text-lg">
+                                ${getReactionIcon(user.reaction)}
+                            </div>
+                        </div>
+                    `;
                     });
 
                 });
@@ -504,7 +625,11 @@
             document.getElementById('reactionModal').classList.add('hidden');
         }
 
-        // helper
+
+        // =========================
+        // 🔹 HELPER FUNCTION
+        // return icon based on reaction type
+        // =========================
         function getReactionIcon(type) {
             const icons = {
                 like: '👍',
@@ -513,6 +638,64 @@
                 praise: '🙌'
             };
             return icons[type] || '👍';
+        }
+
+
+        // =========================
+        // 🔹 IMAGE PREVIEW BEFORE UPLOAD
+        // show selected images + remove option
+        // =========================
+        const imageInput = document.querySelector('input[name="images[]"]');
+        const previewContainer = document.getElementById('image-preview');
+
+        if (imageInput && previewContainer) {
+
+            imageInput.addEventListener('change', function() {
+
+                // clear previous preview
+                previewContainer.innerHTML = '';
+
+                const files = Array.from(this.files);
+
+                // 🔥 limit max 4 images
+                if (files.length > 4) {
+                    alert('Max 4 images only');
+                    this.value = ''; // reset input
+                    return;
+                }
+
+                files.forEach((file, index) => {
+
+                    // skip if not image
+                    if (!file.type.startsWith('image/')) return;
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = "relative";
+
+                    const img = document.createElement('img');
+                    const url = URL.createObjectURL(file);
+
+                    img.src = url;
+                    img.className = "rounded-lg object-cover w-20 h-20 flex-shrink-0 border";
+
+                    // 🔥 free memory after load
+                    img.onload = () => URL.revokeObjectURL(url);
+
+                    // 🔥 remove button
+                    const removeBtn = document.createElement('button');
+                    removeBtn.innerHTML = '✕';
+                    removeBtn.className = "absolute top-1 right-1 bg-black text-white text-xs px-1 rounded";
+
+                    removeBtn.onclick = () => {
+                        wrapper.remove();
+                    };
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+
+                    previewContainer.appendChild(wrapper);
+                });
+            });
         }
     </script>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\WorshipDevotion;
 use App\Models\WorshipDevotionComment;
+use App\Models\WorshipDevotionImage;
 use App\Models\WorshipDevotionLike;
 
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,7 @@ class WorshipDevotionController extends Controller
 
         $devotions = WorshipDevotion::with([
             'user',
+            'images',
             'comments.user',
             'comments.replies.user'
         ])
@@ -46,13 +48,33 @@ class WorshipDevotionController extends Controller
     {
         $request->validate([
             'content' => 'required|string',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:5048'
         ]);
 
-        WorshipDevotion::create([
+        // 🔥 CREATE POST
+        $devotion = WorshipDevotion::create([
             'user_id'   => Auth::user()->id,
-            'church_id' => session('church_id'), // ✅ from session
+            'church_id' => session('church_id'),
             'content'   => $request->content,
         ]);
+
+        // 🔥 HANDLE MULTIPLE IMAGES
+        if ($request->hasFile('images')) {
+
+            foreach ($request->file('images') as $image) {
+
+                // save to storage
+                $path = $image->storePublicly('devotion-images');
+
+                // save to DB
+                WorshipDevotionImage::create([
+                    'worship_devotion_id' => $devotion->id,
+                    'user_id' => Auth::user()->id,
+                    'church_id' => session('church_id'),
+                    'image_path' => $path
+                ]);
+            }
+        }
 
         return back()->with('success', 'Devotion posted!');
     }
@@ -93,7 +115,8 @@ class WorshipDevotionController extends Controller
     {
         $churchId = session('church_id');
 
-        $devotion = WorshipDevotion::where('id', $id)
+        $devotion = WorshipDevotion::with('images')
+            ->where('id', $id)
             ->where('church_id', $churchId)
             ->firstOrFail();
 
@@ -101,13 +124,23 @@ class WorshipDevotionController extends Controller
             abort(403);
         }
 
+        // 🔥 DELETE IMAGES (FILE + DB)
+        foreach ($devotion->images as $img) {
+
+            if ($img->image_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($img->image_path)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($img->image_path);
+            }
+
+            $img->delete();
+        }
+
         // 🔥 DELETE COMMENTS
         WorshipDevotionComment::where('worship_devotion_id', $devotion->id)->delete();
 
-        // 🔥 DELETE LIKES (NEW FIX)
+        // 🔥 DELETE LIKES
         WorshipDevotionLike::where('worship_devotion_id', $devotion->id)->delete();
 
-        // DELETE POST
+        // 🔥 DELETE POST
         $devotion->delete();
 
         return back()->with('success', 'Devotion deleted!');
