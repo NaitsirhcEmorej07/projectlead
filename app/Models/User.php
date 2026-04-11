@@ -84,7 +84,7 @@ class User extends Authenticatable
         return $this->belongsToMany(
             \App\Models\RoleSelect::class,
             'role_user'
-        );
+        )->withTimestamps(); // 🔥 THIS IS THE FIX
     }
 
 
