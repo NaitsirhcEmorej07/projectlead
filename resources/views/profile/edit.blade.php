@@ -21,7 +21,7 @@
                 </div>
             @endchurchUser
 
-            {{-- <!-- Update Password -->
+            <!-- Update Password -->
             <div class="flex justify-center ">
                 <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-gray-300">
                     @include('profile.partials.update-password-form')
@@ -33,7 +33,7 @@
                 <div class="bg-white shadow-sm rounded-lg p-4 sm:p-6 w-full max-w-xl border border-gray-300">
                     @include('profile.partials.delete-user-form')
                 </div>
-            </div> --}}
+            </div>
 
             {{-- Reference for centered UI: https://chatgpt.com/g/g-p-69c4a14703c88191b5ff915440a74d2c-project-lead/c/69ce80bf-6728-8320-ac4b-19f3d46848be --}}
         </div>
